@@ -7,11 +7,11 @@ layout (location = 2) in vec2 aTexCoord;
 out vec3 fragmentColor;
 out vec2 TexCoord;
 
-uniform vec4 transformation;
+uniform mat4 transform;
 
 void main()
 {
-    gl_Position = vec4 (vertexPos.x*transformation.x, vertexPos.y*transformation.y, vertexPos.z*transformation.z , 1.0);
-    fragmentColor = vertexPos;
+    gl_Position = transform * vec4(vertexPos.x, vertexPos.y, vertexPos.z , 1.0);
+    fragmentColor = vertexColor + vertexPos;
     TexCoord = aTexCoord;
 }

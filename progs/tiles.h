@@ -1,5 +1,6 @@
 #pragma once
 #include "config.h"
+#include "input.h"
 
 class Tile {
     public:

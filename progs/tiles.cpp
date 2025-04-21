@@ -1,5 +1,4 @@
 #include "tiles.h"
-#include "input.h"
 #include <unordered_set>
 
 #define TILE_COUNT 3

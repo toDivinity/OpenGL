@@ -1,5 +1,4 @@
 #include "config.h"
-#include <utility>
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
@@ -138,7 +137,7 @@ void Object::draw_object()
     
     glBindTexture(GL_TEXTURE_2D, texture);
     glBindVertexArray(VAO);
-    glDrawArrays(GL_TRIANGLES, 0, data.size()/3);
+    glDrawArrays(GL_TRIANGLES, 0, (int)data.size()/3);
     glBindVertexArray(0);
 }
 

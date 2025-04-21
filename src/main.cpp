@@ -1,9 +1,9 @@
 ﻿#include "config.h"
-#include "cube.h"
+#include "rotation.h"
 #include "tiles.h"
 
 int main()
 {
-    tiles();
+    rotation();
     return 0;
 }

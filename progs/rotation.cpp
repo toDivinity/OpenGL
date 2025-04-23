@@ -8,7 +8,7 @@ int rotation()
         return 1;
     }
 
-    GLFWwindow* window = glfwCreateWindow(800, 800, "Cube", NULL, NULL);
+    GLFWwindow* window = glfwCreateWindow(800, 800, "rotation", NULL, NULL);
 
     if(!window)
     {
@@ -33,22 +33,22 @@ int rotation()
         stbi_image_free(icons[0].pixels);
     }
 
-    unsigned int program = make_shader(
-        "../../shaders/mainVertex.glsl",
-        "../../shaders/mainFragments.glsl"
+    GLuint program = DivineEngine::make_shader(
+        "../../shaders/rotationShader/rotationVertex.glsl",
+        "../../shaders/rotationShader/rotationFragments.glsl"
     );
 
     glfwSetKeyCallback(window, key_callback);
 
-    Object NElf;
+    DivineObject::Object NElf;
 
     glUseProgram(program);
 
     int matrix = glGetUniformLocation(program, "transform");
 
-    vec3 transformVec ={1, 0, 0};
+    DivineMath::vec3 transformVec ={1, 0, 0};
     float angle = 0;
-    mat4 transformMat;
+    DivineMath::mat4 transformMat;
     int mixPercent = glGetUniformLocation(program, "mixPercent");
 
     NElf.load_object("../../resources/Object.txt");
@@ -64,7 +64,12 @@ int rotation()
         glUniform1f(mixPercent, (float)(sin(glfwGetTime()*2.5f)/2.5f)+0.5f);
 
         angle+=0.01f;
-        transformMat = create_z_rotate(angle);
+        transformMat =  
+                        DivineMath::create_x_rotation_matrix(angle)* 
+                        DivineMath::create_z_rotation_matrix(angle) * 
+                        DivineMath::create_y_rotation_matrix(angle) * 
+                        DivineMath::create_translation_matrix(DivineMath::vec3(0.5f, 0.5f, 0.0f))*
+                        DivineMath::create_scale_matrix(DivineMath::vec3(0.5f, 0.5f, 0.0f));
         glUniformMatrix4fv(matrix, 1, GL_FALSE, transformMat.data);
         NElf.draw_object();
         glfwSwapBuffers(window);
@@ -78,8 +83,6 @@ int rotation()
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
     if (key == GLFW_KEY_SPACE && action == GLFW_PRESS) 
     {
-        switchPolygonMode();
+        DivineObject::switchPolygonMode();
     }
 }
-
-#undef STB_IMAGE_IMPLEMENTATION

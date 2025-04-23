@@ -1,7 +1,8 @@
 #ifndef SPINNING_CUBE_H
 #define SPINNING_CUBE_H
-#include "config.h"
-#include "math_lib.h"
+#include "DivineConfig.h"
+#include "DivineMath.h"
+#include "DivineObject.h"
 #include "stb_image.h"
 
 int rotation();

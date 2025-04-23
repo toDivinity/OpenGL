@@ -47,7 +47,7 @@ int rotation()
 
     float angle = 0;
     DivineMath::mat4 transformMat;
-
+    
     NElf.load_object("../../resources/Object.txt");
     NElf.load_texture("../../resources/NEicon.png");
     
@@ -56,19 +56,19 @@ int rotation()
     {
         if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
         {
-            y-=0.001;
+            y-=0.001f;
         }
         if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
         {
-            x+=0.001;
+            x+=0.001f;
         }
         if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) 
         {
-            y+=0.001;
+            y+=0.001f;
         }
         if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
         {
-            x-=0.001;
+            x-=0.001f;
         }
         glClearColor((cos(glfwGetTime())/3)+0.5, (cos(glfwGetTime())/3)+0.5, (cos(glfwGetTime())/3)+0.5, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);

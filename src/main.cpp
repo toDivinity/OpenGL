@@ -1,9 +1,8 @@
-﻿#include "config.h"
-#include "rotation.h"
-#include "tiles.h"
+﻿
+#include "config.h"
+#include "DivineArena.h"
 
-int main()
-{
-    rotation();
+int main() {
+    DivineArena();
     return 0;
 }

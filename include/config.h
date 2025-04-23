@@ -2,6 +2,10 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -16,18 +20,3 @@ unsigned int make_shader (const std::string& vertex_filepath, const std::string&
 unsigned int make_module (const std::string& filepath, unsigned int module_type);
 
 void switchPolygonMode();
-
-class Object
-{
-    public:
-    std::vector<float> data;
-    unsigned int VBO;
-    unsigned int VAO;
-    unsigned int texture;
-    Object();
-    Object(std::string object_filepath);
-    ~Object();
-    int load_object(std::string object_filepath);
-    int load_texture(std::string texture_filepath);
-    void draw_object();
-};

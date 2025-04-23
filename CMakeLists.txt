@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.10)
 project(DivineEngine)
 
 # Сбор исходников
-file(GLOB SOURCES "src/*.cpp" "src/*.c" "progs/*.cpp" "progs/*.c" "include/*.h")
+file(GLOB SOURCES "src/*.cpp" "src/*.c" "progs/*.cpp" "progs/*.c")
 
 # Настройка кодировки для MSVC
 if (MSVC)
@@ -25,6 +25,9 @@ if (NOT glfw3_FOUND)
     message(STATUS "Trying to find in ${CMAKE_SOURCE_DIR}")
     find_package(glfw3 REQUIRED PATHS "${CMAKE_SOURCE_DIR}/dependencies/glfw/lib/cmake/glfw3" NO_DEFAULT_PATH)
 endif()
+
+# GLM
+include_directories("${CMAKE_SOURCE_DIR}/dependencies/glm")
 
 # Заголовочные файлы
 include_directories(

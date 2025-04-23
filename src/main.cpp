@@ -1,4 +1,4 @@
-﻿#include "config.h"
+﻿#include "DivineConfig.h"
 #include "rotation.h"
 #include "tiles.h"
 

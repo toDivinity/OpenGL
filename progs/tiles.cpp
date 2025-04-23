@@ -34,14 +34,14 @@ int tiles()
     double mousePosX = -1;
     double mousePosY = -1;
 
-    unsigned int shader = make_shader(
-        "../../shaders/tilesVertex.glsl",
-        "../../shaders/tilesFragments.glsl"
+    unsigned int shader = DivineEngine::make_shader(
+        "../../shaders/tilesShader/tilesVertex.glsl",
+        "../../shaders/tilesShader/tilesFragments.glsl"
     );
 
-    unsigned int lineShader = make_shader(
-        "../../shaders/lineVertex.glsl",
-        "../../shaders/lineFragments.glsl" 
+    unsigned int lineShader = DivineEngine::make_shader(
+        "../../shaders/tilesShader/lineVertex.glsl",
+        "../../shaders/tilesShader/lineFragments.glsl" 
     );
     
     Tile* tiles[TILE_COUNT];
@@ -60,8 +60,7 @@ int tiles()
         if(glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS && playground<800) playground++;
         if(glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS && playground>100) playground--;
         
-        processInput(window);
-        if(mousePosOnClickPress(window, &mousePosX, &mousePosY))
+        if(DivineInput::mousePosOnClickPress(window, &mousePosX, &mousePosY))
         {
             bool clickedOnBlack = false;
 

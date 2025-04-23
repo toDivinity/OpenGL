@@ -30,6 +30,7 @@ endif()
 include_directories(
     ${PROJECT_SOURCE_DIR}/include
     ${PROJECT_SOURCE_DIR}/progs
+    ${PROJECT_SOURCE_DIR}/dependencies/glm
 )
 
 add_executable(DivineEngine ${SOURCES})

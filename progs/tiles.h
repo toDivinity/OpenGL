@@ -1,6 +1,6 @@
 #pragma once
-#include "config.h"
-#include "input.h"
+#include "DivineConfig.h"
+#include "DivineInput.h"
 
 class Tile {
     public:

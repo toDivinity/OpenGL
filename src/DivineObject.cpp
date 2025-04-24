@@ -6,9 +6,9 @@ DivineObject::Object::Object()
 
 }
 
-DivineObject::Object::Object(std::string object_filepath) 
+DivineObject::Object::Object(std::string object_filepath, GLuint DRAW_MODE) 
 {
-    load_object(object_filepath);
+    load_object(object_filepath, DRAW_MODE);
 }
 
 DivineObject::Object::~Object()
@@ -17,7 +17,7 @@ DivineObject::Object::~Object()
     glDeleteVertexArrays(1, &VAO);
 }
 
-GLuint DivineObject::Object::load_object(std::string object_filepath)
+GLuint DivineObject::Object::load_object(std::string object_filepath, GLuint DRAW_MODE )
 {
     std::ifstream object_datafile(object_filepath);
     if (!object_datafile.is_open()) {
@@ -46,7 +46,7 @@ GLuint DivineObject::Object::load_object(std::string object_filepath)
 
     glBindVertexArray(VAO);
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, data.size() * sizeof(float), data.data(), GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, data.size() * sizeof(float), data.data(), DRAW_MODE);
     
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(0 * sizeof(float)));
     glEnableVertexAttribArray(0);

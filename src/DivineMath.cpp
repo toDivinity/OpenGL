@@ -75,3 +75,18 @@ DivineMath::mat4 DivineMath::create_scale_matrix(vec3 scale_vector)
     
     return scale_matrix;
 }
+
+DivineMath::mat4 DivineMath::create_projection_matrix(float fov, float aspect, float zNear, float zFar)
+{
+    float const tanHalfFov = tan(fov / 2.0f);
+
+    DivineMath::mat4 projection_matrix = 
+    {
+        1.0f / (aspect * tanHalfFov), 0.0f,             0.0f,                          0.0f,
+        0.0f,                        1.0f / tanHalfFov, 0.0f,                          0.0f,
+        0.0f,                        0.0f,              -(zFar + zNear) / (zFar - zNear), -1.0f,
+        0.0f,                        0.0f,              -(2.0f * zFar * zNear) / (zFar - zNear), 0.0f
+    };
+    
+    return projection_matrix;
+}

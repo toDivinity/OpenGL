@@ -14,9 +14,9 @@ namespace DivineObject
         unsigned int VAO;
         unsigned int texture;
         Object();
-        Object(std::string object_filepath);
+        Object(std::string object_filepath, GLuint DRAW_MODE);
         ~Object();
-        GLuint load_object(std::string object_filepath);
+        GLuint load_object(std::string object_filepath, GLuint DRAW_MODE);
         GLuint load_obj(std::string object_filepath);
         GLuint load_texture(std::string texture_filepath);
         void move_object(DivineMath::vec3 moveVec);

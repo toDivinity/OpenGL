@@ -5,6 +5,7 @@
 
 namespace DivineEngine
 {
+
     GLuint make_shader (const std::string& vertex_filepath, const std::string& fragment_filepath)
     {
         std::vector <unsigned int> modules;

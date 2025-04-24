@@ -1,6 +1,4 @@
 #pragma once
-
-#include "DivineConfig.h"
 #include <cmath>
 
 #define PI 3.14159
@@ -75,4 +73,5 @@ namespace DivineMath
     mat4 create_y_rotation_matrix(float rotation_angle_degrees);
     mat4 create_x_rotation_matrix(float rotation_angle_degrees);
     mat4 create_scale_matrix(vec3 scale_vector);
+    mat4 create_projection_matrix(float fov, float aspect, float zNear, float zFar);
 }

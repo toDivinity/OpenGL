@@ -50,6 +50,18 @@ namespace DivineMath
         return vec3(left.x+right.x, left.y+right.y, left.z+right.z);
     }
 
+    static vec3& operator+=(vec3& left, const vec3& right)
+    {
+        left = vec3(left.x + right.x, left.y + right.y, left.z + right.z);
+        return left;
+    }
+
+    static vec3& operator-=(vec3& left, const vec3& right)
+    {
+        left = vec3(left.x - right.x, left.y - right.y, left.z - right.z);
+        return left;
+    }
+
     static vec3 operator*(const float& left, const vec3& right)
     {
         return vec3(left*right.x, left*right.y, left*right.z);

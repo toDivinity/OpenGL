@@ -84,7 +84,8 @@ int rotation()
     GLuint staticProjectionMatrixLocation = glGetUniformLocation(staticShader, "projectionMatrix");
 
     float angle = 0;
-    float viewAngle = 0;
+    float viewAngleX = 60;
+    float viewAngleY = 0;
     DivineMath::mat4 modelMat;
     DivineMath::mat4 viewMat;
     DivineMath::mat4 projectionMat;
@@ -102,39 +103,11 @@ int rotation()
         projectionMat = DivineMath::create_projection_matrix((float)glm::radians(90.0f), WIDTH/HEIGHT, 0.1f, 25.0f);
         glClearColor((cos(glfwGetTime())/3)+0.5f, (cos(glfwGetTime())/3)+0.5f, (cos(glfwGetTime())/3)+0.5f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        DivineInput::processInput(window, &camera, deltaTime, &viewAngleX, &viewAngleY);
         
-        if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-        {
-            camera.cameraPos.z += camera.cameraSpeed * deltaTime;
-            camera.cameraTarget = camera.cameraTarget + camera.cameraPos;
-        }
-        if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-        {
-            camera.cameraPos.x += camera.cameraSpeed * deltaTime;
-            camera.cameraTarget = camera.cameraTarget + camera.cameraPos;
-        }
-        if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) 
-        {
-            camera.cameraPos.z -= camera.cameraSpeed * deltaTime;
-            camera.cameraTarget = camera.cameraTarget + camera.cameraPos;
-        }
-        if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-        {
-            camera.cameraPos.x -= camera.cameraSpeed * deltaTime;
-            camera.cameraTarget = camera.cameraTarget + camera.cameraPos;
-        }
-        if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) 
-        {
-            camera.cameraPos.y -= camera.cameraSpeed * deltaTime;
-            camera.cameraTarget = camera.cameraTarget + camera.cameraPos;
-        }
-        if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
-        {
-            camera.cameraPos.y += camera.cameraSpeed * deltaTime;
-            camera.cameraTarget = camera.cameraTarget + camera.cameraPos;
-        }
-        
-        viewMat = DivineMath::create_x_rotation_matrix(viewAngle)*DivineMath::create_translation_matrix(DivineMath::vec3(camera.cameraPos));
+        //viewMat = DivineMath::create_x_rotation_matrix(viewAngle)*DivineMath::create_translation_matrix(DivineMath::vec3(camera.cameraPos));
+        viewMat = camera.lookAt(camera.cameraPos, camera.cameraTarget, DivineCamera::up)*DivineMath::create_x_rotation_matrix(viewAngleX)*DivineMath::create_y_rotation_matrix(viewAngleY);
         glUseProgram(staticShader);
         modelMat = DivineMath::create_x_rotation_matrix(90)*DivineMath::create_scale_matrix(DivineMath::vec3(10.0f, 1.0f, 10.0f));
         

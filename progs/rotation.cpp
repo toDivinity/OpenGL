@@ -2,13 +2,15 @@
 
 int rotation()
 {
-    GLuint WIDTH = 800, HEIGHT = 800 ;
+    int WIDTH = 800, HEIGHT = 800;
+    GLfloat deltaTime = 0.0f;
+    GLfloat lastFrame = 0.0f;
     if(!glfwInit())
     {
         std::cerr<<"GLFW initialization failed\n";
         return 1;
     }
-
+    //glfwGetPrimaryMonitor() - fullscreen
     GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT,  "rotation", NULL, NULL);
 
     if(!window)
@@ -27,11 +29,23 @@ int rotation()
         return -1;
     }
 
-    GLFWimage icons[1];
-    icons[0].pixels = stbi_load("../../resources/NEicon.png", &icons[0].width, &icons[0].height, 0, 4);
-    if (icons[0].pixels) {
-        glfwSetWindowIcon(window, 1, icons);
-        stbi_image_free(icons[0].pixels);
+    GLFWimage icon[1];
+    icon[0].pixels = stbi_load("../../resources/NEicon.png", &icon[0].width, &icon[0].height, 0, 4);
+    if (icon[0].pixels) {
+        glfwSetWindowIcon(window, 1, icon);
+        stbi_image_free(icon[0].pixels);
+    }
+
+    GLFWimage cursorImage;
+    cursorImage.pixels = stbi_load("../../resources/nightelf.png", &cursorImage.width, &cursorImage.height, 0, 4);
+    if (cursorImage.pixels) 
+    {
+        GLFWcursor* cursor = glfwCreateCursor(&cursorImage, 0, 0);  // hotspot x and y are 0
+        if (cursor) 
+        {
+            glfwSetCursor(window, cursor);
+        }
+        stbi_image_free(cursorImage.pixels);
     }
 
     GLuint program = DivineEngine::make_shader(
@@ -43,6 +57,7 @@ int rotation()
         "../../shaders/rotationShader/staticVertex.glsl",
         "../../shaders/rotationShader/staticFragments.glsl"
     );
+    
     glfwSetKeyCallback(window, key_callback);
 
     DivineObject::Object NElf;
@@ -50,8 +65,13 @@ int rotation()
     NElf.load_texture("../../resources/NEicon.png");
 
     DivineObject::Object Ground;
-    Ground.load_object("../../resources/ground.txt", GL_STATIC_DRAW);
+    Ground.load_object("../../resources/ground.txt", GL_DYNAMIC_DRAW);
     Ground.load_texture("../../resources/grass.png");
+
+    DivineObject::Object CoordinateSystem;
+    CoordinateSystem.load_object("../../resources/CoordinateSystem.txt", GL_DYNAMIC_DRAW);
+
+
     
     GLuint mixPercentLocation = glGetUniformLocation(program, "mixPercent");
 
@@ -64,52 +84,68 @@ int rotation()
     GLuint staticProjectionMatrixLocation = glGetUniformLocation(staticShader, "projectionMatrix");
 
     float angle = 0;
+    float viewAngle = 0;
     DivineMath::mat4 modelMat;
     DivineMath::mat4 viewMat;
-    DivineMath::mat4 projectionMat = DivineMath::create_projection_matrix((float)glm::radians(90.0f), WIDTH/HEIGHT, 0.1f, 10.0f);
+    DivineMath::mat4 projectionMat;
 
     //start camera pos
-    float x = 0, y = 0, z = -1.0;
-    
-    glViewport(0, 0, WIDTH, HEIGHT );
+    DivineCamera::Camera camera;
+    glEnable(GL_DEPTH_TEST);
     while(!glfwWindowShouldClose(window))
     {
+        GLfloat currentFrame = glfwGetTime();
+        deltaTime = currentFrame - lastFrame;
+        lastFrame = currentFrame;
+        glfwGetFramebufferSize(window, &WIDTH, &HEIGHT);
+        glViewport(0, 0, WIDTH, HEIGHT );
+        projectionMat = DivineMath::create_projection_matrix((float)glm::radians(90.0f), WIDTH/HEIGHT, 0.1f, 25.0f);
+        glClearColor((cos(glfwGetTime())/3)+0.5f, (cos(glfwGetTime())/3)+0.5f, (cos(glfwGetTime())/3)+0.5f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        
         if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
         {
-            z+=0.001f;
+            camera.cameraPos.z += camera.cameraSpeed * deltaTime;
+            camera.cameraTarget = camera.cameraTarget + camera.cameraPos;
         }
         if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
         {
-            x+=0.001f;
+            camera.cameraPos.x += camera.cameraSpeed * deltaTime;
+            camera.cameraTarget = camera.cameraTarget + camera.cameraPos;
         }
         if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) 
         {
-            z-=0.001f;
+            camera.cameraPos.z -= camera.cameraSpeed * deltaTime;
+            camera.cameraTarget = camera.cameraTarget + camera.cameraPos;
         }
         if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
         {
-            x-=0.001f;
+            camera.cameraPos.x -= camera.cameraSpeed * deltaTime;
+            camera.cameraTarget = camera.cameraTarget + camera.cameraPos;
         }
         if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) 
         {
-            y-=0.001f;
+            camera.cameraPos.y -= camera.cameraSpeed * deltaTime;
+            camera.cameraTarget = camera.cameraTarget + camera.cameraPos;
         }
         if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
         {
-            y+=0.001f;
+            camera.cameraPos.y += camera.cameraSpeed * deltaTime;
+            camera.cameraTarget = camera.cameraTarget + camera.cameraPos;
         }
-
-        glClearColor((cos(glfwGetTime())/3)+0.5f, (cos(glfwGetTime())/3)+0.5f, (cos(glfwGetTime())/3)+0.5f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
-
+        
+        viewMat = DivineMath::create_x_rotation_matrix(viewAngle)*DivineMath::create_translation_matrix(DivineMath::vec3(camera.cameraPos));
         glUseProgram(staticShader);
-        modelMat =  DivineMath::create_scale_matrix(DivineMath::vec3(5.0f, 5.0f, 1.0f))*DivineMath::create_x_rotation_matrix(90);
-        viewMat =   DivineMath::create_translation_matrix(DivineMath::vec3(x, y, z));
+        modelMat = DivineMath::create_x_rotation_matrix(90)*DivineMath::create_scale_matrix(DivineMath::vec3(10.0f, 1.0f, 10.0f));
         
         glUniformMatrix4fv(staticModelMatrixLocation, 1, GL_FALSE, modelMat.data);
         glUniformMatrix4fv(staticViewMatrixLocation, 1, GL_FALSE, viewMat.data);
         glUniformMatrix4fv(staticProjectionMatrixLocation, 1, GL_FALSE, projectionMat.data);
         Ground.draw_object();
+
+        modelMat = DivineMath::create_scale_matrix(DivineMath::vec3(10.0f, 10.0f, 10.0f));
+        glUniformMatrix4fv(staticModelMatrixLocation, 1, GL_FALSE, modelMat.data);
+        CoordinateSystem.draw_object();
 
         glUseProgram(program);        
         glUniform1f(mixPercentLocation, (float)(sin(glfwGetTime()*2.5f)/2.5f)+0.5f);
@@ -118,8 +154,6 @@ int rotation()
                     DivineMath::create_z_rotation_matrix(angle)*  
                     DivineMath::create_y_rotation_matrix(0) *
                     DivineMath::create_x_rotation_matrix(angle);
-
-        viewMat =   DivineMath::create_translation_matrix(DivineMath::vec3(x, y, z));
 
         glUniformMatrix4fv(modelMatrixLocation, 1, GL_FALSE, modelMat.data);
         glUniformMatrix4fv(viewMatrixLocation, 1, GL_FALSE, viewMat.data);
@@ -141,5 +175,9 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
     if (key == GLFW_KEY_1 && action == GLFW_PRESS) 
     {
         DivineObject::switchPolygonMode();
+    }
+    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) 
+    {
+        glfwSetWindowShouldClose(window, true);
     }
 }

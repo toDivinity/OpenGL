@@ -5,6 +5,7 @@
 
 namespace DivineMath
 {
+    //структуры
     struct vec2
     {
         float x, y;
@@ -37,6 +38,28 @@ namespace DivineMath
         float data [16];
     };
 
+    //операторы
+
+    static vec3 operator-(const vec3& left, const vec3& right)
+    {
+        return vec3(left.x-right.x, left.y-right.y, left.z-right.z);
+    }
+
+    static vec3 operator+(const vec3& left, const vec3& right)
+    {
+        return vec3(left.x+right.x, left.y+right.y, left.z+right.z);
+    }
+
+    static vec3 operator*(const float& left, const vec3& right)
+    {
+        return vec3(left*right.x, left*right.y, left*right.z);
+    }
+
+    static vec3 operator*(const vec3& left, const float& right)
+    {
+        return vec3(left.x*right, left.y*right, left.z*right);
+    }
+
     static mat4 operator*(const mat4& left, const mat4& right)
     {
         mat4 result = {0};
@@ -66,12 +89,12 @@ namespace DivineMath
         return result;
     }
 
-    
-
     mat4 create_translation_matrix(vec3 translation_vector);
     mat4 create_z_rotation_matrix(float rotation_angle_degrees);
     mat4 create_y_rotation_matrix(float rotation_angle_degrees);
     mat4 create_x_rotation_matrix(float rotation_angle_degrees);
     mat4 create_scale_matrix(vec3 scale_vector);
     mat4 create_projection_matrix(float fov, float aspect, float zNear, float zFar);
+    vec3 normalize(const vec3& v);
+    vec3 cross(const vec3& a, const vec3& b);
 }

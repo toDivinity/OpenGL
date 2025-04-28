@@ -1,6 +1,7 @@
 #pragma once
 #include <DivineConfig.h>
 #include "DivineCamera.h"
+
 namespace DivineInput
 {
 void processInput(GLFWwindow *window, DivineCamera::Camera *camera, GLfloat deltaTime);

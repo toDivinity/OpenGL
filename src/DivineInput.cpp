@@ -42,78 +42,61 @@ namespace DivineInput
         return clicked;
     }
 
-    void processInput(GLFWwindow *window, DivineCamera::Camera *camera, GLfloat deltaTime, float* viewAngleX, float* viewAngleY)
+    void processInput(GLFWwindow *window, DivineCamera::Camera *camera, GLfloat deltaTime)
     {
         float rotationSpeed = 45;
         if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
         {
             camera->cameraPos -= camera->cameraTarget*camera->cameraSpeed * deltaTime;
-            std::cout<<camera->cameraPos.x<<" "<<camera->cameraPos.y<<" "<<camera->cameraPos.z<<std::endl;
+            //std::cout<<camera->cameraPos.x<<" "<<camera->cameraPos.y<<" "<<camera->cameraPos.z<<std::endl;
         }
         if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
         {
-            camera->cameraPos += DivineMath::cross(camera->cameraTarget, DivineCamera::up)*camera->cameraSpeed * deltaTime;
-            std::cout<<camera->cameraPos.x<<" "<<camera->cameraPos.y<<" "<<camera->cameraPos.z<<std::endl;
+            camera->cameraPos += DivineMath::cross(camera->cameraTarget, DivineCamera::up).normalize()*camera->cameraSpeed * deltaTime;
+            //std::cout<<camera->cameraPos.x<<" "<<camera->cameraPos.y<<" "<<camera->cameraPos.z<<std::endl;
         }
         if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) 
         {
             camera->cameraPos += camera->cameraTarget*camera->cameraSpeed * deltaTime;
-            std::cout<<camera->cameraPos.x<<" "<<camera->cameraPos.y<<" "<<camera->cameraPos.z<<std::endl;
+            //std::cout<<camera->cameraPos.x<<" "<<camera->cameraPos.y<<" "<<camera->cameraPos.z<<std::endl;
         }
         if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
         {
-            camera->cameraPos -= DivineMath::cross(camera->cameraTarget, DivineCamera::up)*camera->cameraSpeed * deltaTime;
-            std::cout<<camera->cameraPos.x<<" "<<camera->cameraPos.y<<" "<<camera->cameraPos.z<<std::endl;
+            camera->cameraPos -= DivineMath::cross(camera->cameraTarget, DivineCamera::up).normalize()*camera->cameraSpeed * deltaTime;
+
+            //std::cout<<camera->cameraPos.x<<" "<<camera->cameraPos.y<<" "<<camera->cameraPos.z<<std::endl;
         }
 
         if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) 
         {
-            camera->cameraPos += DivineMath::cross(DivineMath::cross(camera->cameraTarget, DivineCamera::up), camera->cameraTarget)*camera->cameraSpeed * deltaTime;
-            std::cout<<camera->cameraPos.x<<" "<<camera->cameraPos.y<<" "<<camera->cameraPos.z<<std::endl;
+            camera->cameraPos += DivineMath::cross(DivineMath::cross(camera->cameraTarget, DivineCamera::up), camera->cameraTarget).normalize()*camera->cameraSpeed * deltaTime;
+            //std::cout<<camera->cameraPos.x<<" "<<camera->cameraPos.y<<" "<<camera->cameraPos.z<<std::endl;
         }
         if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
         {
-            camera->cameraPos -= DivineMath::cross(DivineMath::cross(camera->cameraTarget, DivineCamera::up), camera->cameraTarget)*camera->cameraSpeed * deltaTime;
-            std::cout<<camera->cameraPos.x<<" "<<camera->cameraPos.y<<" "<<camera->cameraPos.z<<std::endl;
+            camera->cameraPos -= DivineMath::cross(DivineMath::cross(camera->cameraTarget, DivineCamera::up), camera->cameraTarget).normalize()*camera->cameraSpeed * deltaTime;
+            //std::cout<<camera->cameraPos.x<<" "<<camera->cameraPos.y<<" "<<camera->cameraPos.z<<std::endl;
         }
 
         if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
             camera->cameraPitch -= camera->cameraRotationSpeed * deltaTime;
             camera->cameraUpdage();
+            std::cout<<camera->cameraTarget.x<<" "<<camera->cameraTarget.y<<" "<<camera->cameraTarget.z<<std::endl;
         }
         if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
             camera->cameraPitch += camera->cameraRotationSpeed * deltaTime;
             camera->cameraUpdage();
+            std::cout<<camera->cameraTarget.x<<" "<<camera->cameraTarget.y<<" "<<camera->cameraTarget.z<<std::endl;
         }
         if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
             camera->cameraYaw += camera->cameraRotationSpeed * deltaTime;
             camera->cameraUpdage();
+            std::cout<<camera->cameraTarget.x<<" "<<camera->cameraTarget.y<<" "<<camera->cameraTarget.z<<std::endl;
         }
         if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
             camera->cameraYaw -= camera->cameraRotationSpeed * deltaTime;
             camera->cameraUpdage();
+            std::cout<<camera->cameraTarget.x<<" "<<camera->cameraTarget.y<<" "<<camera->cameraTarget.z<<std::endl;
         }
-        // if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) 
-        // {
-        //     camera->cameraTarget.y -= 1*deltaTime;
-        //     camera->cameraTarget = DivineMath::normalize(camera->cameraTarget);
-        //     std::cout<<camera->cameraTarget.x<<" "<<camera->cameraTarget.y<<" "<<camera->cameraTarget.z<<std::endl;
-        // }
-        // if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
-        //     camera->cameraTarget.y += 1*deltaTime;
-        //     camera->cameraTarget = DivineMath::normalize(camera->cameraTarget);
-        //     std::cout<<camera->cameraTarget.x<<" "<<camera->cameraTarget.y<<" "<<camera->cameraTarget.z<<std::endl;
-        // }
-        // if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
-        //     camera->cameraTarget.x -= 1*deltaTime;
-        //     camera->cameraTarget = DivineMath::normalize(camera->cameraTarget);
-        //     std::cout<<camera->cameraTarget.x<<" "<<camera->cameraTarget.y<<" "<<camera->cameraTarget.z<<std::endl;
-        // }
-        // if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
-        //     camera->cameraTarget.x += 1*deltaTime;
-        //     camera->cameraTarget = DivineMath::normalize(camera->cameraTarget);
-        //     std::cout<<camera->cameraTarget.x<<" "<<camera->cameraTarget.y<<" "<<camera->cameraTarget.z<<std::endl;
-        // }
     }
-
 }

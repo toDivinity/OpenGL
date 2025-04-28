@@ -91,15 +91,25 @@ DivineMath::mat4 DivineMath::create_projection_matrix(float fov, float aspect, f
     return projection_matrix;
 }
 
-DivineMath::vec3 DivineMath::normalize(const DivineMath::vec3& v) {
+DivineMath::vec3 DivineMath::normalize(const DivineMath::vec3& v) 
+{
     float length = sqrt(v.x * v.x + v.y * v.y + v.z * v.z);
     if (length > 0.0f) {
         return {v.x / length, v.y / length, v.z / length};
     }
     return {0.0f, 0.0f, 0.0f};
 }
+DivineMath::vec3 DivineMath::vec3::normalize()
+{
+    float length = sqrt(this->x * this->x + this->y * this->y + this->z * this->z);
+    this->x /= length;
+    this->y /= length;
+    this->z /= length;
+    return  DivineMath::vec3(x,y,z);
+}
 
-DivineMath::vec3 DivineMath::cross(const DivineMath::vec3& a, const DivineMath::vec3& b) {
+DivineMath::vec3 DivineMath::cross(const DivineMath::vec3& a, const DivineMath::vec3& b) 
+{
     return {
         a.y * b.z - a.z * b.y,
         a.z * b.x - a.x * b.z,

@@ -1,18 +1,21 @@
 #include "rotation.h"
 
+GLfloat lastX = 400, lastY = 300;
+bool firstMouse = true;
 int rotation()
 {
     int WIDTH = 800, HEIGHT = 800;
     GLfloat deltaTime = 0.0f;
     GLfloat lastFrame = 0.0f;
+    
     if(!glfwInit())
     {
         std::cerr<<"GLFW initialization failed\n";
         return 1;
     }
-    //glfwGetPrimaryMonitor() - fullscreen
-    GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT,  "rotation", NULL, NULL);
 
+    //GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT,  "rotation", glfwGetPrimaryMonitor(), NULL);
+    GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT,  "rotation", NULL, NULL);
     if(!window)
     {
         std::cerr<<"window creation failed\n";
@@ -59,9 +62,12 @@ int rotation()
         "../../shaders/rotationShader/staticFragments.glsl"
     );
     
+    DivineCamera::Camera camera;
+
+    glfwSetWindowUserPointer(window, &camera);
     glfwSetKeyCallback(window, key_callback);
     glfwSetCursorPosCallback(window, mouse_callback);
-    //glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
     DivineObject::Object NElf;
     NElf.load_object("../../resources/Object.txt", GL_DYNAMIC_DRAW);
@@ -85,14 +91,10 @@ int rotation()
     GLuint staticProjectionMatrixLocation = glGetUniformLocation(staticShader, "projectionMatrix");
 
     float angle = 0;
-    float viewAngleX = 0;
-    float viewAngleY = 0;
     DivineMath::mat4 modelMat;
     DivineMath::mat4 viewMat;
     DivineMath::mat4 projectionMat;
 
-    //start camera pos
-    DivineCamera::Camera camera;
     glEnable(GL_DEPTH_TEST);
     while(!glfwWindowShouldClose(window))
     {
@@ -108,7 +110,7 @@ int rotation()
         glClearColor((cos(glfwGetTime())/3)+0.5f, (cos(glfwGetTime())/3)+0.5f, (cos(glfwGetTime())/3)+0.5f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        DivineInput::processInput(window, &camera, deltaTime, &viewAngleX, &viewAngleY);
+        DivineInput::processInput(window, &camera, deltaTime);
         
         //viewMat = DivineMath::create_x_rotation_matrix(viewAngle)*DivineMath::create_translation_matrix(DivineMath::vec3(camera.cameraPos));
         viewMat = camera.lookAt(camera.cameraPos, camera.cameraTarget, DivineCamera::up);
@@ -167,4 +169,36 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 
 void mouse_callback(GLFWwindow* window, double xpos, double ypos)
 {
+    DivineCamera::Camera* camera = static_cast<DivineCamera::Camera*>(glfwGetWindowUserPointer(window));
+    
+    if(firstMouse)
+    {
+        lastX = xpos;
+        lastY = ypos;
+        firstMouse = false;
+    }
+  
+    GLfloat xoffset = xpos - lastX;
+    GLfloat yoffset = ypos - lastY; // Reversed since y-coordinates go from bottom to top
+    lastX = xpos;
+    lastY = ypos;
+
+    const GLfloat sensitivity = 0.1f;
+    xoffset *= sensitivity;
+    yoffset *= sensitivity;
+
+    camera->cameraYaw += xoffset;
+    camera->cameraPitch += yoffset;
+
+    // Make sure that when pitch is out of bounds, screen doesn't get flipped
+    if(camera->cameraPitch > 89.0f)
+        camera->cameraPitch = 89.0f;
+    if(camera->cameraPitch < -89.0f)
+        camera->cameraPitch = -89.0f;
+
+    DivineMath::vec3 front;
+    front.x = cos(glm::radians(camera->cameraYaw)) * cos(glm::radians(camera->cameraPitch));
+    front.y = sin(glm::radians(camera->cameraPitch));
+    front.z = sin(glm::radians(camera->cameraYaw)) * cos(glm::radians(camera->cameraPitch));
+    camera->cameraTarget = DivineMath::normalize(front);
 }

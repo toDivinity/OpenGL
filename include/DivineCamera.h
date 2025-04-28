@@ -8,13 +8,15 @@ namespace DivineCamera
     class Camera
     {
         public:
-            float cameraSpeed = 2.0f;
+            float cameraYaw = 90.0f; 
+            float cameraPitch = 0.0f;
+            float cameraRotationSpeed;
+            float cameraSpeed;
             DivineMath::vec3 cameraPos;
             DivineMath::vec3 cameraTarget;
-            DivineMath::vec3 cameraUp;
-            DivineMath::vec3 cameraRight;
             Camera();
             ~Camera();
-            DivineMath::mat4 lookAt(DivineMath::vec3 eye, DivineMath::vec3 center, DivineMath::vec3 up);
+            DivineMath::mat4 lookAt(DivineMath::vec3 cameraPos, DivineMath::vec3 cameraTarget, DivineMath::vec3 up);
+            void cameraUpdage();
     };
 }

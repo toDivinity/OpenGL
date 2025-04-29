@@ -44,7 +44,12 @@ namespace DivineEngine
         std::stringstream bufferedLines;
         std::string line;
 
-        file.open(filepath);
+        file.open(DivineEngine::sourceDir + filepath);
+        if(!file)
+        {
+            std::cerr<<"could not open shader file"<<std::endl;
+            return -1;
+        }
         while(std::getline(file,line))
         {
             bufferedLines<<line<<"\n";

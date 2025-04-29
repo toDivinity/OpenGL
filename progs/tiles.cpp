@@ -35,13 +35,13 @@ int tiles()
     double mousePosY = -1;
 
     unsigned int shader = DivineEngine::make_shader(
-        "../../shaders/tilesShader/tilesVertex.glsl",
-        "../../shaders/tilesShader/tilesFragments.glsl"
+        "shaders/tilesShader/tilesVertex.glsl",
+        "shaders/tilesShader/tilesFragments.glsl"
     );
 
     unsigned int lineShader = DivineEngine::make_shader(
-        "../../shaders/tilesShader/lineVertex.glsl",
-        "../../shaders/tilesShader/lineFragments.glsl" 
+        "shaders/tilesShader/lineVertex.glsl",
+        "shaders/tilesShader/lineFragments.glsl" 
     );
     
     Tile* tiles[TILE_COUNT];

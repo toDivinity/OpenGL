@@ -16,14 +16,15 @@ if (NOT PWSH_EXECUTABLE)
 endif()
 
 # Поиск OpenGL
+set(OpenGL_GL_PREFERENCE "GLVND")
 find_package(OpenGL REQUIRED)
 
 # Поиск GLFW
 find_package(glfw3 QUIET)
 if (NOT glfw3_FOUND)
-    message(STATUS "Can't find GLFW in system directories")
-    message(STATUS "Trying to find in ${CMAKE_SOURCE_DIR}")
-    find_package(glfw3 REQUIRED PATHS "${CMAKE_SOURCE_DIR}/dependencies/glfw/lib/cmake/glfw3" NO_DEFAULT_PATH)
+message(STATUS "Can't find GLFW in system directories")
+message(STATUS "Trying to find in ${CMAKE_SOURCE_DIR}")
+find_package(glfw3 REQUIRED PATHS "${CMAKE_SOURCE_DIR}/dependencies/glfw/lib/cmake/glfw3" NO_DEFAULT_PATH)
 endif()
 
 # Заголовочные файлы

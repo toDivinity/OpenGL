@@ -20,7 +20,7 @@ namespace DivineObject
 
     GLuint DivineObject::Object::load_object(std::string object_filepath, GLuint DRAW_MODE )
     {
-        std::ifstream object_datafile(object_filepath);
+        std::ifstream object_datafile(DivineEngine::sourceDir + object_filepath);
         if (!object_datafile.is_open()) {
             return -1;
         }
@@ -76,7 +76,7 @@ namespace DivineObject
 
         int width, height, nrChannels;
         stbi_set_flip_vertically_on_load(true);
-        unsigned char *textureData = stbi_load(texture_filepath.c_str(), &width, &height, &nrChannels, 0);
+        unsigned char *textureData = stbi_load((DivineEngine::sourceDir + texture_filepath).c_str(), &width, &height, &nrChannels, 0);
         
         if (!textureData) {
             std::cerr << "Failed to load texture: " << texture_filepath << std::endl;
@@ -115,7 +115,7 @@ namespace DivineObject
         glBindVertexArray(0);
     }
 
-    void DivineObject::switchPolygonMode()
+    void switchPolygonMode()
     {
         if(!DivineObject::PolygonView)
         {

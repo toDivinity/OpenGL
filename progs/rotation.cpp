@@ -2,6 +2,7 @@
 
 GLfloat lastX = 400, lastY = 300;
 bool firstMouse = true;
+
 int rotation()
 {
     int WIDTH = 800, HEIGHT = 800;
@@ -33,7 +34,7 @@ int rotation()
     }
 
     GLFWimage icon[1];
-    icon[0].pixels = stbi_load("../../resources/NEicon.png", &icon[0].width, &icon[0].height, 0, 4);
+    icon[0].pixels = stbi_load((DivineEngine::sourceDir + "resources/NEicon.png").c_str(), &icon[0].width, &icon[0].height, 0, 4);
     if (icon[0].pixels) {
         glfwSetWindowIcon(window, 1, icon);
         stbi_image_free(icon[0].pixels);
@@ -41,7 +42,7 @@ int rotation()
 
     GLFWcursor* cursor;
     GLFWimage cursorImage;
-    cursorImage.pixels = stbi_load("../../resources/nightelf.png", &cursorImage.width, &cursorImage.height, 0, 4);
+    cursorImage.pixels = stbi_load((DivineEngine::sourceDir + "resources/nightelf.png").c_str(), &cursorImage.width, &cursorImage.height, 0, 4);
     if (cursorImage.pixels) 
     {
         cursor = glfwCreateCursor(&cursorImage, 0, 0);  // hotspot x and y are 0
@@ -53,13 +54,13 @@ int rotation()
     }
 
     GLuint program = DivineEngine::make_shader(
-        "../../shaders/rotationShader/rotationVertex.glsl",
-        "../../shaders/rotationShader/rotationFragments.glsl"
+        "shaders/rotationShader/rotationVertex.glsl",
+        "shaders/rotationShader/rotationFragments.glsl"
     );
 
     GLuint staticShader = DivineEngine::make_shader(
-        "../../shaders/rotationShader/staticVertex.glsl",
-        "../../shaders/rotationShader/staticFragments.glsl"
+        "shaders/rotationShader/staticVertex.glsl",
+        "shaders/rotationShader/staticFragments.glsl"
     );
     
     DivineCamera::Camera camera;
@@ -70,15 +71,15 @@ int rotation()
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
     DivineObject::Object NElf;
-    NElf.load_object("../../resources/Object.txt", GL_DYNAMIC_DRAW);
-    NElf.load_texture("../../resources/NEicon.png");
+    NElf.load_object("resources/Object.txt", GL_DYNAMIC_DRAW);
+    NElf.load_texture("resources/NEicon.png");
 
     DivineObject::Object Ground;
-    Ground.load_object("../../resources/ground.txt", GL_DYNAMIC_DRAW);
-    Ground.load_texture("../../resources/grass.png");
+    Ground.load_object("resources/ground.txt", GL_DYNAMIC_DRAW);
+    Ground.load_texture("resources/grass.png");
 
     DivineObject::Object CoordinateSystem;
-    CoordinateSystem.load_object("../../resources/CoordinateSystem.txt", GL_DYNAMIC_DRAW);
+    CoordinateSystem.load_object("resources/CoordinateSystem.txt", GL_DYNAMIC_DRAW);
     
     GLuint mixPercentLocation = glGetUniformLocation(program, "mixPercent");
 

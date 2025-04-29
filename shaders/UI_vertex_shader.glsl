@@ -8,12 +8,10 @@ out vec2 texCoord;
 out vec3 fragmentColor;       
 
 uniform mat4 modelMatrix;
-uniform mat4 viewMatrix;
-uniform mat4 projectionMatrix;
 
 void main()
 {
-    gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4(position, 1.0);
+    gl_Position = modelMatrix * vec4(position, 1.0);
     fragmentColor = color;
     texCoord = textureCoord;
 }

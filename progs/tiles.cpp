@@ -38,6 +38,11 @@ int tiles()
         "shaders/tilesShader/tilesVertex.glsl",
         "shaders/tilesShader/tilesFragments.glsl"
     );
+    
+    // unsigned int shader = DivineEngine::make_shader(
+    //     "shaders/mainVertex.glsl",
+    //     "shaders/mainFragment.glsl"
+    // );
 
     unsigned int lineShader = DivineEngine::make_shader(
         "shaders/tilesShader/lineVertex.glsl",
@@ -48,6 +53,7 @@ int tiles()
     for (int i = 0; i < TILE_COUNT; ++i) {
         tiles[i] = new Tile();
     }
+
     Map* map = new Map();
 
     unsigned int playground = 500;

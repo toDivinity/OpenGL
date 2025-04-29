@@ -54,13 +54,13 @@ int rotation()
     }
 
     GLuint program = DivineEngine::make_shader(
-        "shaders/rotationShader/rotationVertex.glsl",
-        "shaders/rotationShader/rotationFragments.glsl"
+        "shaders/mainVertex.glsl",
+        "shaders/mainFragment.glsl"
     );
 
-    GLuint staticShader = DivineEngine::make_shader(
-        "shaders/rotationShader/staticVertex.glsl",
-        "shaders/rotationShader/staticFragments.glsl"
+    GLuint UIshader = DivineEngine::make_shader(
+        "shaders/UI_vertex_shader.glsl",
+        "shaders/UI_fragment_shader.glsl"
     );
     
     DivineCamera::Camera camera;
@@ -80,6 +80,10 @@ int rotation()
 
     DivineObject::Object CoordinateSystem;
     CoordinateSystem.load_object("resources/CoordinateSystem.txt", GL_DYNAMIC_DRAW);
+
+    DivineObject::Object UI;
+    UI.load_object("resources/UI.txt", GL_STATIC_DRAW);
+    UI.load_texture("resources/NEicon.png");
     
     GLuint mixPercentLocation = glGetUniformLocation(program, "mixPercent");
 
@@ -87,9 +91,9 @@ int rotation()
     GLuint viewMatrixLocation = glGetUniformLocation(program, "viewMatrix");
     GLuint projectionMatrixLocation = glGetUniformLocation(program, "projectionMatrix");
 
-    GLuint staticModelMatrixLocation = glGetUniformLocation(staticShader, "modelMatrix");
-    GLuint staticViewMatrixLocation = glGetUniformLocation(staticShader, "viewMatrix");
-    GLuint staticProjectionMatrixLocation = glGetUniformLocation(staticShader, "projectionMatrix");
+    GLuint staticModelMatrixLocation = glGetUniformLocation(program, "modelMatrix");
+    GLuint staticViewMatrixLocation = glGetUniformLocation(program, "viewMatrix");
+    GLuint staticProjectionMatrixLocation = glGetUniformLocation(program, "projectionMatrix");
 
     float angle = 0;
     DivineMath::mat4 modelMat;
@@ -116,19 +120,20 @@ int rotation()
         //viewMat = DivineMath::create_x_rotation_matrix(viewAngle)*DivineMath::create_translation_matrix(DivineMath::vec3(camera.cameraPos));
         viewMat = camera.lookAt(camera.cameraPos, camera.cameraTarget, DivineCamera::up);
 
-        glUseProgram(staticShader);
+        glUseProgram(program);
+
         modelMat = DivineMath::create_x_rotation_matrix(90)*DivineMath::create_scale_matrix(DivineMath::vec3(10.0f, 1.0f, 10.0f));
-        
+        glUniform1f(mixPercentLocation, 0.0f);
         glUniformMatrix4fv(staticModelMatrixLocation, 1, GL_FALSE, modelMat.data);
         glUniformMatrix4fv(staticViewMatrixLocation, 1, GL_FALSE, viewMat.data);
         glUniformMatrix4fv(staticProjectionMatrixLocation, 1, GL_FALSE, projectionMat.data);
         Ground.draw_object();
 
         modelMat = DivineMath::create_scale_matrix(DivineMath::vec3(10.0f, 10.0f, 10.0f));
+        glUniform1f(mixPercentLocation, 1.0f);
         glUniformMatrix4fv(staticModelMatrixLocation, 1, GL_FALSE, modelMat.data);
         CoordinateSystem.draw_object();
-
-        glUseProgram(program);        
+      
         glUniform1f(mixPercentLocation, (float)(sin(glfwGetTime()*2.5f)/2.5f)+0.5f);
         angle+=60.0f*deltaTime;
         modelMat =  DivineMath::create_scale_matrix(DivineMath::vec3(0.5f, 0.5f, 0.5f))*
@@ -141,6 +146,13 @@ int rotation()
         glUniformMatrix4fv(projectionMatrixLocation, 1, GL_FALSE, projectionMat.data);
         NElf.draw_object();
 
+        glUseProgram(UIshader);
+        modelMat =  DivineMath::create_scale_matrix(DivineMath::vec3(1.0f, 0.2f, 1.0f)) *
+                    DivineMath::create_translation_matrix(DivineMath::vec3 (0.0f, -0.8f, -1.0f));
+
+        glUniformMatrix4fv(modelMatrixLocation, 1, GL_FALSE, modelMat.data);
+        UI.draw_object();
+
        
         glfwSwapBuffers(window);
         glfwPollEvents();
@@ -151,7 +163,6 @@ int rotation()
         glfwDestroyCursor(cursor);
     }
     glDeleteProgram(program);
-    glDeleteProgram(staticShader);
     glfwTerminate();
     return 0;
 }

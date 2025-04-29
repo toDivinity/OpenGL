@@ -4,6 +4,6 @@
 
 int main()
 {
-    rotation();
+    tiles();
     return 0;
 }

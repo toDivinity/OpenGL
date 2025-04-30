@@ -1,9 +1,9 @@
 ﻿#include "DivineConfig.h"
-#include "rotation.h"
-#include "tiles.h"
+#include "3dScene/scene.h"
+#include "Tiles/tiles.h"
 
 int main()
 {
-    tiles();
+    Scene3d();
     return 0;
 }

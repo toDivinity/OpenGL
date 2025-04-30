@@ -17,6 +17,7 @@ namespace DivineCamera
             Camera();
             ~Camera();
             DivineMath::mat4 lookAt(DivineMath::vec3 cameraPos, DivineMath::vec3 cameraTarget, DivineMath::vec3 up);
+            void cameraMovement(GLFWwindow *window, DivineCamera::Camera *camera, GLfloat deltaTime);
             void cameraUpdage();
     };
 }

@@ -5,6 +5,7 @@
 namespace DivineObject
 {
     static bool PolygonView = false;
+    static bool CursorView = false;
 
     struct Vertex 
     {

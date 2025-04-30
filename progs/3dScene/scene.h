@@ -1,5 +1,4 @@
-#ifndef SPINNING_CUBE_H
-#define SPINNING_CUBE_H
+#pragma once
 #include "DivineConfig.h"
 #include "DivineMath.h"
 #include "DivineObject.h"
@@ -7,7 +6,7 @@
 #include "DivineCamera.h"
 #include "stb_image.h"
 
-int rotation();
+GLint Scene3d();
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
-void mouse_callback(GLFWwindow* window, double xpos, double ypos);
-#endif
+void mouse_callback(GLFWwindow* window, int button, int action, int mods);
+void cursor_callback(GLFWwindow* window, double xpos, double ypos);

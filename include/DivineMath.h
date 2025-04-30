@@ -40,7 +40,6 @@ namespace DivineMath
     };
 
     //операторы
-
     static vec3 operator-(const vec3& left, const vec3& right)
     {
         return vec3(left.x-right.x, left.y-right.y, left.z-right.z);

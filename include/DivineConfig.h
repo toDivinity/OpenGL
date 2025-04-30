@@ -25,4 +25,8 @@ static std::string sourceDir = "../";
 #endif
 unsigned int make_shader (const std::string& vertex_filepath, const std::string& fragment_filepath);
 unsigned int make_module (const std::string& filepath, unsigned int module_type);
+
+float getDeltaTime(float*);
+void setWindowIcon(GLFWwindow* window, std::string filepath);
+void setCursorIcon(GLFWwindow* window, GLFWcursor*& cursor, std::string filepath);
 }

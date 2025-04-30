@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.10)
 project(DivineEngine)
 
 # Сбор исходников
-file(GLOB SOURCES "src/*.cpp" "src/*.c" "progs/*.cpp" "progs/*.c" "include/*.h")
+file(GLOB SOURCES "src/*.cpp" "src/*.c" "progs/*/*.cpp" "progs/*/*.c" "include/*.h")
 
 # Настройка кодировки для MSVC
 if (MSVC)

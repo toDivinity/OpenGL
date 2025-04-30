@@ -5,7 +5,7 @@
 
 int WHITE_TILES_WIDTH = 1000, WHITE_TILES_HEIGHT = 800;
 
-int tiles()
+int Tiles()
 {
     if (!glfwInit()) 
     {

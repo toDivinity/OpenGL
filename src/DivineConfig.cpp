@@ -5,7 +5,6 @@
 
 namespace DivineEngine
 {
-
     GLuint make_shader (const std::string& vertex_filepath, const std::string& fragment_filepath)
     {
         std::vector <unsigned int> modules;
@@ -36,9 +35,8 @@ namespace DivineEngine
         }
         return shader;
     }
+
     GLuint make_module (const std::string& filepath, unsigned int module_type)
-
-
     {
         std::ifstream file;
         std::stringstream bufferedLines;
@@ -77,4 +75,38 @@ namespace DivineEngine
         return shaderModule;
     }
 
+    static float lastFrame;
+    float getDeltaTime(float* deltaTime)
+    {
+        GLfloat currentFrame = (float)glfwGetTime();
+        *deltaTime = currentFrame - lastFrame;
+        lastFrame = currentFrame;
+        return *deltaTime;
+    }
+
+    
+    void setWindowIcon(GLFWwindow* window, std::string filepath)
+    {
+        GLFWimage icon[1];
+        icon[0].pixels = stbi_load((DivineEngine::sourceDir + filepath).c_str(), &icon[0].width, &icon[0].height, 0, 4);
+        if (icon[0].pixels) {
+            glfwSetWindowIcon(window, 1, icon);
+            stbi_image_free(icon[0].pixels);
+        }
+    }
+
+    void setCursorIcon(GLFWwindow* window, GLFWcursor*& cursor, std::string filepath)
+    {
+        GLFWimage cursorImage;
+        cursorImage.pixels = stbi_load((DivineEngine::sourceDir + filepath).c_str(), &cursorImage.width, &cursorImage.height, 0, 4);
+        if (cursorImage.pixels) 
+        {
+            cursor = glfwCreateCursor(&cursorImage, 0, 0);  // hotspot x and y are 0
+            if (cursor) 
+            {
+                glfwSetCursor(window, cursor);
+            }
+            stbi_image_free(cursorImage.pixels);
+        }
+    }
 }

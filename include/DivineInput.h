@@ -4,7 +4,6 @@
 
 namespace DivineInput
 {
-void processInput(GLFWwindow *window, DivineCamera::Camera *camera, GLfloat deltaTime);
-bool mousePosOnClickRelease(GLFWwindow* window, double xPos, double yPos);
-bool mousePosOnClickPress(GLFWwindow* window, double* xPos, double* yPos);
+    bool mousePosOnClickRelease(GLFWwindow* window, double xPos, double yPos);
+    bool mousePosOnClickPress(GLFWwindow* window, double* xPos, double* yPos);
 }

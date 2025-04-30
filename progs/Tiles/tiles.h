@@ -242,5 +242,5 @@ class Map {
     };    
 
     
-int tiles();
+int Tiles();
 bool isClickedOnBlackTile(double mousePosX, double mousePosY, unsigned int playground, Tile* tile);

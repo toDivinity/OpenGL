@@ -45,4 +45,63 @@ namespace DivineCamera
         direction.z = sin(glm::radians(cameraYaw)) * cos(glm::radians(cameraPitch));
         this->cameraTarget = DivineMath::normalize(direction);
     }
+
+    void Camera::cameraMovement(GLFWwindow *window, DivineCamera::Camera *camera, GLfloat deltaTime)
+    {
+        float rotationSpeed = 45;
+        if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+        {
+            camera->cameraPos -= camera->cameraTarget*camera->cameraSpeed * deltaTime;
+            //camera->cameraPos -= DivineMath::vec3(camera->cameraTarget.x, 0.0f, camera->cameraTarget.z).normalize()*camera->cameraSpeed * deltaTime;
+            //std::cout<<camera->cameraPos.x<<" "<<camera->cameraPos.y<<" "<<camera->cameraPos.z<<std::endl;
+        }
+        if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+        {
+            camera->cameraPos += DivineMath::cross(camera->cameraTarget, DivineCamera::up).normalize()*camera->cameraSpeed * deltaTime;
+            //std::cout<<camera->cameraPos.x<<" "<<camera->cameraPos.y<<" "<<camera->cameraPos.z<<std::endl;
+        }
+        if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) 
+        {
+            camera->cameraPos += camera->cameraTarget*camera->cameraSpeed * deltaTime;
+            //std::cout<<camera->cameraPos.x<<" "<<camera->cameraPos.y<<" "<<camera->cameraPos.z<<std::endl;
+        }
+        if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+        {
+            camera->cameraPos -= DivineMath::cross(camera->cameraTarget, DivineCamera::up).normalize()*camera->cameraSpeed * deltaTime;
+
+            //std::cout<<camera->cameraPos.x<<" "<<camera->cameraPos.y<<" "<<camera->cameraPos.z<<std::endl;
+        }
+
+        if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) 
+        {
+            camera->cameraPos += DivineMath::cross(DivineMath::cross(camera->cameraTarget, DivineCamera::up), camera->cameraTarget).normalize()*camera->cameraSpeed * deltaTime;
+            //std::cout<<camera->cameraPos.x<<" "<<camera->cameraPos.y<<" "<<camera->cameraPos.z<<std::endl;
+        }
+        if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
+        {
+            camera->cameraPos -= DivineMath::cross(DivineMath::cross(camera->cameraTarget, DivineCamera::up), camera->cameraTarget).normalize()*camera->cameraSpeed * deltaTime;
+            //std::cout<<camera->cameraPos.x<<" "<<camera->cameraPos.y<<" "<<camera->cameraPos.z<<std::endl;
+        }
+
+        if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
+            camera->cameraPitch -= camera->cameraRotationSpeed * deltaTime;
+            camera->cameraUpdage();
+            std::cout<<camera->cameraTarget.x<<" "<<camera->cameraTarget.y<<" "<<camera->cameraTarget.z<<std::endl;
+        }
+        if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
+            camera->cameraPitch += camera->cameraRotationSpeed * deltaTime;
+            camera->cameraUpdage();
+            std::cout<<camera->cameraTarget.x<<" "<<camera->cameraTarget.y<<" "<<camera->cameraTarget.z<<std::endl;
+        }
+        if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
+            camera->cameraYaw += camera->cameraRotationSpeed * deltaTime;
+            camera->cameraUpdage();
+            std::cout<<camera->cameraTarget.x<<" "<<camera->cameraTarget.y<<" "<<camera->cameraTarget.z<<std::endl;
+        }
+        if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
+            camera->cameraYaw -= camera->cameraRotationSpeed * deltaTime;
+            camera->cameraUpdage();
+            std::cout<<camera->cameraTarget.x<<" "<<camera->cameraTarget.y<<" "<<camera->cameraTarget.z<<std::endl;
+        }
+    }
 }

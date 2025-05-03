@@ -46,6 +46,11 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
     {
         glfwSetWindowShouldClose(window, true);
     }
+    
+    if ((key == GLFW_KEY_KP_ADD || key == GLFW_KEY_KP_SUBTRACT) && action == GLFW_PRESS) {
+        DivineCamera::Camera* camera = static_cast<DivineCamera::Camera*>(glfwGetWindowUserPointer(window));
+        camera->UpdateCameraSpeed(key);
+    }
 }
 
 void mouse_callback(GLFWwindow* window, int button, int action, int mods)
@@ -78,39 +83,39 @@ void mouse_callback(GLFWwindow* window, int button, int action, int mods)
 
 void cursor_callback(GLFWwindow* window, double xpos, double ypos)
 {
-    if(DivineObject::CursorView == false)
+    if (DivineObject::CursorView == false)
     {
         DivineCamera::Camera* camera = static_cast<DivineCamera::Camera*>(glfwGetWindowUserPointer(window));
-        
-        if(firstMouse)
-        {
-            lastX = (float)xpos;
-            lastY = (float)ypos;
-            firstMouse = false;
-            return; // Пропускаем первый кадр, чтобы избежать резкого скачка
-        }
+        camera->UpdateCameraAngles(&lastX, &lastY, &firstMouse, xpos, ypos);
+        // if(firstMouse)
+        // {
+        //     lastX = (float)xpos;
+        //     lastY = (float)ypos;
+        //     firstMouse = false;
+        //     return; // Пропускаем первый кадр, чтобы избежать резкого скачка
+        // }
 
-        GLfloat xoffset = float (xpos - lastX);
-        GLfloat yoffset = float (lastY - ypos); // Обратный знак, так как y-координаты идут сверху вниз
-        lastX = (float)xpos;
-        lastY = (float)ypos;
+        // GLfloat xoffset = float (xpos - lastX);
+        // GLfloat yoffset = float (lastY - ypos); // Обратный знак, так как y-координаты идут сверху вниз
+        // lastX = (float)xpos;
+        // lastY = (float)ypos;
 
-        const GLfloat sensitivity = 0.1f;
-        xoffset *= sensitivity;
-        yoffset *= sensitivity;
+        // const GLfloat sensitivity = 0.1f;
+        // xoffset *= sensitivity;
+        // yoffset *= sensitivity;
 
-        camera->cameraYaw += xoffset;
-        camera->cameraPitch -= yoffset;
+        // camera->cameraYaw += xoffset;
+        // camera->cameraPitch -= yoffset;
 
-        if(camera->cameraPitch > 89.0f)
-            camera->cameraPitch = 89.0f;
-        if(camera->cameraPitch < -89.0f)
-            camera->cameraPitch = -89.0f;
+        // if(camera->cameraPitch > 89.0f)
+        //     camera->cameraPitch = 89.0f;
+        // if(camera->cameraPitch < -89.0f)
+        //     camera->cameraPitch = -89.0f;
 
-        DivineMath::vec3 front;
-        front.x = cos(glm::radians(camera->cameraYaw)) * cos(glm::radians(camera->cameraPitch));
-        front.y = sin(glm::radians(camera->cameraPitch));
-        front.z = sin(glm::radians(camera->cameraYaw)) * cos(glm::radians(camera->cameraPitch));
-        camera->cameraTarget = DivineMath::normalize(front);
+        // DivineMath::vec3 front;
+        // front.x = cos(glm::radians(camera->cameraYaw)) * cos(glm::radians(camera->cameraPitch));
+        // front.y = sin(glm::radians(camera->cameraPitch));
+        // front.z = sin(glm::radians(camera->cameraYaw)) * cos(glm::radians(camera->cameraPitch));
+        // camera->cameraTarget = DivineMath::normalize(front);
     }
 }

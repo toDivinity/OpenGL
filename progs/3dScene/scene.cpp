@@ -36,11 +36,6 @@ GLint Scene3d()
         "shaders/mainVertex.glsl",
         "shaders/mainFragment.glsl"
     );
-
-    GLuint UIshader = DivineEngine::make_shader(
-        "shaders/UI_vertex_shader.glsl",
-        "shaders/UI_fragment_shader.glsl"
-    );
     
     DivineCamera::Camera camera;
 
@@ -61,10 +56,6 @@ GLint Scene3d()
     DivineObject::Object CoordinateSystem;
     CoordinateSystem.load_object("resources/CoordinateSystem.txt", GL_DYNAMIC_DRAW);
 
-    DivineObject::Object UI;
-    UI.load_object("resources/UI.txt", GL_STATIC_DRAW);
-    UI.load_texture("resources/AutumnNE_UI.png");
-    
     GLuint mixPercentLocation = glGetUniformLocation(mainShader, "mixPercent");
 
     GLuint modelMatrixLocation = glGetUniformLocation(mainShader, "modelMatrix");
@@ -76,25 +67,25 @@ GLint Scene3d()
     DivineMath::mat4 viewMat;
     DivineMath::mat4 projectionMat;
 
-    glEnable(GL_DEPTH_TEST);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     while(!glfwWindowShouldClose(window))
     {
+        glEnable(GL_DEPTH_TEST);
         float deltaTime = DivineEngine::getDeltaTime(&deltaTime);
 
         glfwGetFramebufferSize(window, &WIDTH, &HEIGHT);
-        glViewport(0, 0, WIDTH, HEIGHT );
+        glViewport(0, 0, WIDTH, HEIGHT);
 
         projectionMat = DivineMath::create_projection_matrix((float)glm::radians(90.0f), (GLfloat)WIDTH/(GLfloat)HEIGHT, 0.1f, 100.0f);
 
         glClearColor((cos(glfwGetTime())/3)+0.5f, (cos(glfwGetTime())/3)+0.5f, (cos(glfwGetTime())/3)+0.5f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        camera.cameraMovement(window, &camera, deltaTime);
+        camera.CameraMovement(window, deltaTime);
         
         //viewMat = DivineMath::create_x_rotation_matrix(viewAngle)*DivineMath::create_translation_matrix(DivineMath::vec3(camera.cameraPos));
-        viewMat = camera.lookAt(camera.cameraPos, camera.cameraTarget, DivineCamera::up);
+        viewMat = camera.CreateView();
 
         glUseProgram(mainShader);
 
@@ -118,18 +109,8 @@ GLint Scene3d()
                     DivineMath::create_x_rotation_matrix(angle);
 
         glUniformMatrix4fv(modelMatrixLocation, 1, GL_FALSE, modelMat.data);
-        glUniformMatrix4fv(viewMatrixLocation, 1, GL_FALSE, viewMat.data);
-        glUniformMatrix4fv(projectionMatrixLocation, 1, GL_FALSE, projectionMat.data);
         NElf.draw_object();
 
-        glUseProgram(UIshader);
-        modelMat =  DivineMath::create_scale_matrix(DivineMath::vec3(1.0f, 1.0f, 1.0f)) *
-                    DivineMath::create_translation_matrix(DivineMath::vec3 (0.0f, 0.0f, -1.0f));
-
-        glUniformMatrix4fv(modelMatrixLocation, 1, GL_FALSE, modelMat.data);
-        UI.draw_object();
-
-       
         glfwSwapBuffers(window);
         glfwPollEvents();
     }

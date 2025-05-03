@@ -10,13 +10,13 @@ namespace DivineInput
         bool clicked = false;
         if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
         {
-            DivineInput::isButtonPressed = true;
+            isButtonPressed = true;
         }
 
-        if(glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_RELEASE && DivineInput::isButtonPressed)
+        if(glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_RELEASE && isButtonPressed)
         {
             clicked = true;
-            DivineInput::isButtonPressed = false;
+            isButtonPressed = false;
             glfwGetCursorPos(window, &xPos, &yPos);
             std::cout<< xPos << " " << yPos << std::endl;
         }
@@ -26,17 +26,17 @@ namespace DivineInput
     bool  mousePosOnClickPress(GLFWwindow* window, double* xPos, double* yPos)
     {
         bool clicked = false;
-        if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS && !DivineInput::isButtonPressed)
+        if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS && !isButtonPressed)
         {
             clicked=true;
-            DivineInput::isButtonPressed = true;
+            isButtonPressed = true;
             glfwGetCursorPos(window, xPos, yPos);
             std::cout<< *xPos << " " << *yPos << std::endl;
         }
 
         if(glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_RELEASE)
         {
-            DivineInput::isButtonPressed = false;
+            isButtonPressed = false;
         }
 
         return clicked;

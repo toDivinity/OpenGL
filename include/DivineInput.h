@@ -1,5 +1,5 @@
 #pragma once
-#include <DivineConfig.h>
+#include "DivineConfig.h"
 #include "DivineCamera.h"
 
 namespace DivineInput

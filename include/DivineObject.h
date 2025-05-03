@@ -28,7 +28,7 @@ namespace DivineObject
         std::vector<Texture>      textures;
 
         Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures);
-        //void Draw(Shader &shader);
+        void Draw();
     private:
 
         unsigned int VAO, VBO, EBO;
@@ -50,6 +50,6 @@ namespace DivineObject
         GLuint load_texture(std::string texture_filepath);
         void draw_object();
     };
-
+    
     void switchPolygonMode();
 }

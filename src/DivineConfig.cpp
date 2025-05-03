@@ -42,7 +42,7 @@ namespace DivineEngine
         std::stringstream bufferedLines;
         std::string line;
 
-        file.open(DivineEngine::sourceDir + filepath);
+        file.open(sourceDir + filepath);
         if(!file)
         {
             std::cerr<<"could not open shader file"<<std::endl;
@@ -70,7 +70,7 @@ namespace DivineEngine
             glGetShaderInfoLog(shaderModule, 1024, NULL, errorLog);
             std::cout << "Shader Module compilation error:\n" << errorLog << std::endl;   
         }
-        else std::cout <<  module_type << " Shaders loaded successfuly\n";
+        else std::cout << filepath << " Shaders loaded successfuly\n";
 
         return shaderModule;
     }
@@ -88,7 +88,7 @@ namespace DivineEngine
     void setWindowIcon(GLFWwindow* window, std::string filepath)
     {
         GLFWimage icon[1];
-        icon[0].pixels = stbi_load((DivineEngine::sourceDir + filepath).c_str(), &icon[0].width, &icon[0].height, 0, 4);
+        icon[0].pixels = stbi_load((sourceDir + filepath).c_str(), &icon[0].width, &icon[0].height, 0, 4);
         if (icon[0].pixels) {
             glfwSetWindowIcon(window, 1, icon);
             stbi_image_free(icon[0].pixels);
@@ -98,7 +98,7 @@ namespace DivineEngine
     void setCursorIcon(GLFWwindow* window, GLFWcursor*& cursor, std::string filepath)
     {
         GLFWimage cursorImage;
-        cursorImage.pixels = stbi_load((DivineEngine::sourceDir + filepath).c_str(), &cursorImage.width, &cursorImage.height, 0, 4);
+        cursorImage.pixels = stbi_load((sourceDir + filepath).c_str(), &cursorImage.width, &cursorImage.height, 0, 4);
         if (cursorImage.pixels) 
         {
             cursor = glfwCreateCursor(&cursorImage, 0, 0);  // hotspot x and y are 0

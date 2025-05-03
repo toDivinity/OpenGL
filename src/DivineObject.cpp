@@ -2,23 +2,23 @@
 #include "stb_image.h"
 namespace DivineObject
 {
-    DivineObject::Object::Object()
+    Object::Object()
     {
 
     }
 
-    DivineObject::Object::Object(std::string object_filepath, GLuint DRAW_MODE) 
+    Object::Object(std::string object_filepath, GLuint DRAW_MODE) 
     {
         load_object(object_filepath, DRAW_MODE);
     }
 
-    DivineObject::Object::~Object()
+    Object::~Object()
     {
         glDeleteBuffers(1, &VBO);
         glDeleteVertexArrays(1, &VAO);
     }
 
-    GLuint DivineObject::Object::load_object(std::string object_filepath, GLuint DRAW_MODE )
+    GLuint Object::load_object(std::string object_filepath, GLuint DRAW_MODE )
     {
         std::ifstream object_datafile(DivineEngine::sourceDir + object_filepath);
         if (!object_datafile.is_open()) {
@@ -64,7 +64,7 @@ namespace DivineObject
         return 0;
     }
 
-    GLuint DivineObject::Object::load_texture(std::string texture_filepath) {
+    GLuint Object::load_texture(std::string texture_filepath) {
         if (texture_filepath.empty()) {
             std::cerr << "Texture filepath is empty!" << std::endl;
             return -1;
@@ -105,7 +105,7 @@ namespace DivineObject
     }
 
 
-    void DivineObject::Object::draw_object()
+    void Object::draw_object()
     {
         if(VAO == 0) return;
         
@@ -117,19 +117,19 @@ namespace DivineObject
 
     void switchPolygonMode()
     {
-        if(!DivineObject::PolygonView)
+        if(!PolygonView)
         {
             glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-            DivineObject::PolygonView = true;
+            PolygonView = true;
         }
         else 
         {
             glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-            DivineObject::PolygonView = false;
+            PolygonView = false;
         }
     }
 
-    DivineObject::Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures)
+    Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures)
     {
         this->vertices = vertices;
         this->indices = indices;
@@ -138,7 +138,7 @@ namespace DivineObject
         setupMesh();
     }
 
-    void DivineObject::Mesh::setupMesh()
+    void Mesh::setupMesh()
     {
         glGenVertexArrays(1, &VAO);
         glGenBuffers(1, &VBO);
@@ -165,4 +165,10 @@ namespace DivineObject
 
         glBindVertexArray(0);
     }  
+    void Mesh::Draw()
+    {
+        glBindVertexArray(VAO);
+        glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
+        glBindVertexArray(0);
+    }
 }

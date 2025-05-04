@@ -19,12 +19,8 @@ message(STATUS "OpenGL found: ${OpenGL_FOUND} (${OpenGL_GLU_LIBRARY})")
 
 # GLFW
 find_package(glfw3 QUIET)
-if (glfw3_FOUND)
-    message(STATUS "GLFW found in system: ${glfw3_VERSION}")
-else()
-    message(STATUS "GLFW not found in system, building from submodule")
+if (NOT glfw3_FOUND)
     add_subdirectory(dependencies/glfw3)
-    set(GLFW_BUILT_FROM_SOURCE TRUE)
 endif()
 
 # tinyobjloader
@@ -32,12 +28,8 @@ add_subdirectory(dependencies/tinyobjloader)
 
 # GLM
 find_package(glm QUIET)
-if (glm_FOUND)
-    message(STATUS "GLM found in system: ${glm_VERSION}")
-else()
-    message(STATUS "GLM not found in system, using submodule version")
+if (NOT glm_FOUND)
     add_subdirectory(dependencies/glm)
-    set(GLM_BUILT_FROM_SOURCE TRUE)
 endif()
 
 # Заголовочные директории
@@ -50,7 +42,7 @@ target_include_directories(DivineEngine PRIVATE
 # Линковка
 target_link_libraries(DivineEngine PRIVATE
     OpenGL::GL
-    $<$<BOOL:${glfw3_FOUND}>:glfw3> $<$<BOOL:${GLFW_BUILT_FROM_SOURCE}>:glfw>
+    glfw3
     tinyobjloader
     glm::glm
 )

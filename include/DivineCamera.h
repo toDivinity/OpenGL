@@ -24,4 +24,8 @@ namespace DivineCamera
             DivineMath::vec3 cameraTarget;
             DivineMath::mat4 LookAt(DivineMath::vec3 cameraPos, DivineMath::vec3 cameraTarget, DivineMath::vec3 up);
     };
+    static Camera mainCamera;
+    static Camera* currentCamera = &mainCamera;
+
+    void makeCameraCurrent(Camera&);
 }

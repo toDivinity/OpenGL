@@ -5,6 +5,34 @@
 
 namespace DivineEngine
 {
+    GLFWwindow* createWindow(int width, int height, const char* title)
+    {
+        if(!glfwInit())
+        {
+            std::cerr << "GLFW initialization failed\n";
+            return nullptr;
+        }
+
+        GLFWwindow* window = glfwCreateWindow(width, height, title, NULL, NULL);
+        if(!window)
+        {
+            std::cerr << "window creation failed\n";
+            glfwTerminate();
+            return nullptr;
+        }
+
+        glfwMakeContextCurrent(window);
+
+        if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+        {
+            std::cerr << "GLAD initialization failed" << std::endl;
+            glfwTerminate();
+            return nullptr;
+        }
+
+        return window;
+    }
+
     GLuint make_shader (const std::string& vertex_filepath, const std::string& fragment_filepath)
     {
         std::vector <unsigned int> modules;
@@ -76,12 +104,12 @@ namespace DivineEngine
     }
 
     static float lastFrame;
-    float getDeltaTime(float* deltaTime)
+    float getDeltaTime()
     {
         GLfloat currentFrame = (float)glfwGetTime();
-        *deltaTime = currentFrame - lastFrame;
+        GLfloat deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
-        return *deltaTime;
+        return deltaTime;
     }
 
     

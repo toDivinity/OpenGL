@@ -1,6 +1,7 @@
 #pragma once
 #include "DivineConfig.h"
 #include "DivineMath.h"
+#include "DivineCamera.h"
 
 namespace DivineObject
 {
@@ -18,37 +19,21 @@ namespace DivineObject
     {
         unsigned int id;
         std::string type;
-    };  
-
-    class Mesh 
-    {
-    public:
-        std::vector<Vertex>       vertices;
-        std::vector<unsigned int> indices;
-        std::vector<Texture>      textures;
-
-        Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures);
-        void Draw();
-    private:
-
-        unsigned int VAO, VBO, EBO;
-
-        void setupMesh();
-    };  
+    };
 
     class Object
     {
         public:
+        float mixPercent = 0.0f;
+        DivineMath::mat4 modelMat, viewMat, projectionMat;
         std::vector<float> data;
-        unsigned int VBO;
-        unsigned int VAO;
-        unsigned int texture;
+        unsigned int VBO, VAO, texture;
         Object();
         Object(std::string object_filepath, GLuint DRAW_MODE);
         ~Object();
         GLuint load_object(std::string object_filepath, GLuint DRAW_MODE);
         GLuint load_texture(std::string texture_filepath);
-        void draw_object();
+        void draw_object(GLFWwindow* window, GLuint shader);
     };
     
     void switchPolygonMode();

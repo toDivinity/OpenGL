@@ -82,7 +82,8 @@
     "random": "cpp",
     "regex": "cpp",
     "stack": "cpp",
-    "variant": "cpp"
+    "variant": "cpp",
+    "mutex": "cpp"
   },
   "C_Cpp.errorSquiggles": "disabled"
 }

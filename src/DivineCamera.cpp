@@ -151,4 +151,9 @@ namespace DivineCamera
             std::cout<< cameraTarget.x<<" "<< cameraTarget.y<<" "<< cameraTarget.z<<std::endl;
         }
     }
+    
+    void makeCameraCurrent(Camera* camera)
+    {
+        currentCamera = camera;
+    }
 }

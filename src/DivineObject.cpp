@@ -4,7 +4,6 @@ namespace DivineObject
 {
     Object::Object()
     {
-
     }
 
     Object::Object(std::string object_filepath, GLuint DRAW_MODE) 
@@ -105,10 +104,26 @@ namespace DivineObject
     }
 
 
-    void Object::draw_object()
+    void Object::draw_object(GLFWwindow* window, GLuint shader)
     {
         if(VAO == 0) return;
+
+        glfwMakeContextCurrent(window);
+        glUseProgram(shader);
+
+        int WIDTH, HEIGHT;
+        glfwGetFramebufferSize(window, &WIDTH, &HEIGHT);
+
+        GLuint mixPercentLocation = glGetUniformLocation(shader, "mixPercent");
+        GLuint modelMatrixLocation = glGetUniformLocation(shader, "modelMatrix");
+        GLuint viewMatrixLocation = glGetUniformLocation(shader, "viewMatrix");
+        GLuint projectionMatrixLocation = glGetUniformLocation(shader, "projectionMatrix");
         
+        glUniform1f(mixPercentLocation, mixPercent);
+        glUniformMatrix4fv(modelMatrixLocation, 1, GL_FALSE, modelMat.data);
+        glUniformMatrix4fv(viewMatrixLocation, 1, GL_FALSE, viewMat.data);
+        glUniformMatrix4fv(projectionMatrixLocation, 1, GL_FALSE, projectionMat.data);
+
         glBindTexture(GL_TEXTURE_2D, texture);
         glBindVertexArray(VAO);
         glDrawArrays(GL_TRIANGLES, 0, (int)data.size()/3);
@@ -127,48 +142,5 @@ namespace DivineObject
             glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
             PolygonView = false;
         }
-    }
-
-    Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures)
-    {
-        this->vertices = vertices;
-        this->indices = indices;
-        this->textures = textures;
-
-        setupMesh();
-    }
-
-    void Mesh::setupMesh()
-    {
-        glGenVertexArrays(1, &VAO);
-        glGenBuffers(1, &VBO);
-        glGenBuffers(1, &EBO);
-    
-        glBindVertexArray(VAO);
-        glBindBuffer(GL_ARRAY_BUFFER, VBO);
-
-        glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), &vertices[0], GL_STATIC_DRAW);  
-
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), 
-                    &indices[0], GL_STATIC_DRAW);
-
-        // vertex positions
-        glEnableVertexAttribArray(0);	
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
-        // vertex normals
-        glEnableVertexAttribArray(1);	
-        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Normal));
-        // vertex texture coords
-        glEnableVertexAttribArray(2);	
-        glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, TexCoords));
-
-        glBindVertexArray(0);
-    }  
-    void Mesh::Draw()
-    {
-        glBindVertexArray(VAO);
-        glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
-        glBindVertexArray(0);
     }
 }

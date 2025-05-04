@@ -9,13 +9,11 @@ message(STATUS "C++ standard set to ${CMAKE_CXX_STANDARD}")
 
 # Источники
 file(GLOB SOURCES "src/*.cpp" "src/*.c" "progs/*/*.cpp" "progs/*/*.c")
-message(STATUS "Found source files: ${SOURCES}")
 
 add_executable(DivineEngine ${SOURCES})
 
 # OpenGL
 find_package(OpenGL REQUIRED)
-message(STATUS "OpenGL found: ${OpenGL_FOUND} (${OpenGL_GLU_LIBRARY})")
 
 # GLFW
 find_package(glfw3 QUIET)
@@ -42,7 +40,7 @@ target_include_directories(DivineEngine PRIVATE
 # Линковка
 target_link_libraries(DivineEngine PRIVATE
     OpenGL::GL
-    glfw3
+    glfw
     tinyobjloader
     glm::glm
 )

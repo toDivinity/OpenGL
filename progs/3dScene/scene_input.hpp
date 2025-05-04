@@ -1,6 +1,7 @@
 #include "scene.h"
 
 int WIDTH = 1200, HEIGHT = 1000;
+GLfloat FOV = 90.0f;
 GLfloat lastX = (float)WIDTH/2, lastY = (float)HEIGHT/2;
 GLfloat savedLastX = 0, savedLastY = 0;
 bool firstMouse = true;

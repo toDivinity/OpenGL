@@ -3,6 +3,9 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
+#define TINYOBJLOADER_IMPLEMENTATION
+#include <tiny_obj_loader.h>
+
 namespace DivineEngine
 {
     GLFWwindow* createWindow(int width, int height, const char* title)
@@ -29,6 +32,10 @@ namespace DivineEngine
             glfwTerminate();
             return nullptr;
         }
+            
+        glEnable(GL_DEPTH_TEST);
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
         return window;
     }

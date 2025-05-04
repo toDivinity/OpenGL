@@ -5,6 +5,7 @@
 #include "DivineInput.h"
 #include "DivineCamera.h"
 #include "stb_image.h"
+#include <tiny_obj_loader.h>
 
 GLint Scene3d();
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);

@@ -21,6 +21,27 @@ GLint Scene3d()
     glfwSetMouseButtonCallback(window, mouse_callback);
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
+    tinyobj::attrib_t attrib;                // Хранит вершины, нормали, UV-координаты
+    std::vector<tinyobj::shape_t> shapes;    // Информация о мешах (подобъектах)
+    std::vector<tinyobj::material_t> materials;  // Материалы (необязательно)
+    std::string warn, err;                   // Предупреждения и ошибки
+
+    // Загрузка модели
+    bool success = tinyobj::LoadObj(
+        &attrib, &shapes, &materials,
+        &warn, &err,
+        "../../resources/tyanka.obj"  // Путь к файлу
+    );
+
+    if (!warn.empty()) std::cout << "WARN: " << warn << std::endl;
+    if (!err.empty()) std::cerr << "ERR: " << err << std::endl;
+    if (!success) {
+        std::cerr << "Failed to load model!" << std::endl;
+    }
+
+    DivineObject::Object tyanka;
+    tyanka.data = attrib.GetVertices();
+
     DivineObject::Object NElf;
     NElf.load_object("resources/Object.txt", GL_DYNAMIC_DRAW);
     NElf.load_texture("resources/NEicon.png");
@@ -36,10 +57,6 @@ GLint Scene3d()
     CoordinateSystem.mixPercent = 0.8f;
     CoordinateSystem.modelMat = DivineMath::create_scale_matrix(DivineMath::vec3(10.0f, 10.0f, 10.0f));
 
-
-    glEnable(GL_DEPTH_TEST);
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     while(!glfwWindowShouldClose(window))
     {
         float deltaTime = DivineEngine::getDeltaTime();
@@ -48,25 +65,37 @@ GLint Scene3d()
         glfwGetFramebufferSize(window, &WIDTH, &HEIGHT);
         glViewport(0, 0, WIDTH, HEIGHT);
 
-        glClearColor((cos(glfwGetTime())/3)+0.5f, (cos(glfwGetTime())/3)+0.5f, (cos(glfwGetTime())/3)+0.5f, 1.0f);
+        DivineMath::mat4 projection = DivineMath::create_projection_matrix(
+            (float)glm::radians(FOV), 
+            (GLfloat)WIDTH/(GLfloat)HEIGHT, 
+            0.1f, 
+            100.0f
+        );
+        DivineMath::mat4 view = DivineCamera::currentCamera->CreateView();
+        
+        float bgColor = (cos(glfwGetTime())/3)+0.5f;
+        glClearColor(bgColor, bgColor, bgColor, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         
-        Ground.projectionMat = DivineMath::create_projection_matrix((float)glm::radians(90.0f), (GLfloat)WIDTH/(GLfloat)HEIGHT, 0.1f, 100.0f);
-        Ground.viewMat = DivineCamera::currentCamera->CreateView();
+        Ground.projectionMat = projection;
+        Ground.viewMat = view;
         Ground.draw_object(window, mainShader);
 
-        CoordinateSystem.projectionMat = DivineMath::create_projection_matrix((float)glm::radians(90.0f), (GLfloat)WIDTH/(GLfloat)HEIGHT, 0.1f, 100.0f);
-        CoordinateSystem.viewMat = DivineCamera::currentCamera->CreateView();
+        CoordinateSystem.projectionMat = projection;
+        CoordinateSystem.viewMat = view;
         CoordinateSystem.draw_object(window, mainShader);
 
-        angle+=60.0f*deltaTime;
+        tyanka.projectionMat = projection;
+        tyanka.viewMat = view;
+        tyanka.draw_object(window, mainShader);
+
+        angle += 60.0f * deltaTime;
         NElf.mixPercent = (float)(sin(glfwGetTime()*2.5f)/2.5f)+0.5f;
-        NElf.modelMat =  DivineMath::create_scale_matrix(DivineMath::vec3(0.5f, 0.5f, 0.5f))*
-                DivineMath::create_z_rotation_matrix(angle)*  
-                DivineMath::create_y_rotation_matrix(0) *
+        NElf.modelMat = DivineMath::create_scale_matrix(DivineMath::vec3(0.5f, 0.5f, 0.5f)) *
+                DivineMath::create_z_rotation_matrix(angle) *  
                 DivineMath::create_x_rotation_matrix(angle);
-        NElf.projectionMat = DivineMath::create_projection_matrix((float)glm::radians(90.0f), (GLfloat)WIDTH/(GLfloat)HEIGHT, 0.1f, 100.0f);
-        NElf.viewMat = DivineCamera::currentCamera->CreateView();
+        NElf.projectionMat = projection;
+        NElf.viewMat = view;
         NElf.draw_object(window, mainShader);
 
         glfwSwapBuffers(window);

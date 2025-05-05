@@ -10,7 +10,7 @@ GLint Scene3d()
     GLFWcursor* cursor = nullptr;
     DivineEngine::setCursorIcon(window, cursor, "resources/nightelf.png");
 
-    DivineCamera::currentCamera->SetCameraPos(DivineMath::vec3(0.0f,0.5f,0.5f));
+    DivineCamera::currentCamera->SetCameraPos(DivineMath::vec3(0.0f,0.0f,0.5f));
 
     GLuint mainShader = DivineEngine::make_shader(
         "shaders/mainVertex.glsl",
@@ -26,22 +26,36 @@ GLint Scene3d()
     glfwSetMouseButtonCallback(window, mouse_callback);
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
-    DivineObject::Object NElf;
-    NElf.load_object("resources/Object.txt", GL_DYNAMIC_DRAW);
-    NElf.load_texture("resources/NEicon.png");
-    NElf.Scale(DivineMath::vec3(0.1f, 0.1f, 0.1f));
-    
-    DivineObject::Object Ground;
-    Ground.load_object("resources/ground.txt", GL_DYNAMIC_DRAW);
-    Ground.load_texture("resources/grass.png");
-    Ground.Translate(DivineMath::vec3(0.0f, 0.3f, 0.0f));
-    Ground.Scale(DivineMath::vec3(3.0f, 3.0f, 1.0f));
-    Ground.Rotate(DivineMath::vec3(90.0f, 0.0f, 0.0f));
+    DivineObject::Object obj;
+    obj.load_obj_model("../../resources/tyanka.obj");
+    obj.Scale(0.1f, 0.1f, 0.1f);
+    obj.Translate(0.2f, 0.0f, 0.2f);
+    obj.Rotate(0.0f, -90.0f, 0.0f);
+    obj.mixPercent = 1.0f;
 
-    DivineObject::Object CoordinateSystem;
-    CoordinateSystem.load_object("resources/CoordinateSystem.txt", GL_DYNAMIC_DRAW);
+    DivineObject::Object sphere;
+    sphere.load_obj_model("../../resources/sphere.obj");
+    sphere.Scale(0.1f, 0.1f, 0.1f);
+    sphere.Translate(-0.2f, 0.0f, -0.2f);
+
+    DivineObject::Object cube;
+    cube.load_obj_model("../../resources/cube.obj");
+    cube.Scale(0.1f, 0.1f, 0.1f);
+    cube.Translate(0.6f, 0.0f, 0.2f);
+    cube.Rotate(60.0f, -90.0f, 0.0f);
+    cube.mixPercent = 1.0f;
+
+    DivineObject::Object NElf("resources/Object.txt", "resources/NEicon.png");
+    NElf.Scale(0.2f, 0.2f, 0.2f);
+    
+    DivineObject::Object Ground("resources/ground.txt", "resources/grass.png");
+    Ground.Translate(0.0f, 0.3f, 0.0f);
+    Ground.Scale(2.0f, 2.0f, 1.0f);
+    Ground.Rotate(90.0f, 0.0f, 0.0f);
+
+    DivineObject::Object CoordinateSystem("resources/CoordinateSystem.txt");
     CoordinateSystem.mixPercent = 0.8f;
-    CoordinateSystem.Scale(DivineMath::vec3(1.0f, 1.0f, 1.0f));
+    CoordinateSystem.Scale(2.0f, 2.0f, 2.0f);
 
     while(!glfwWindowShouldClose(window))
     {
@@ -59,13 +73,22 @@ GLint Scene3d()
         float bgColor = (float)(cos(glfwGetTime())/3)+0.5f;
         glClearColor(bgColor, bgColor, bgColor, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        sphere.draw_object(window, mainShader);
+
+        obj.mixPercent = (float)(sin(glfwGetTime()*2.5f)/2.5f)+0.5f;
+        obj.Rotate(0.0f, 60.0f*deltaTime, 0.0f);
+        obj.draw_object(window, mainShader);
+
+        cube.Rotate(60.0f*deltaTime, 0.0f, 60.0f*deltaTime);
+        cube.draw_object(window, mainShader);
         
         Ground.draw_object(window, mainShader);
 
         CoordinateSystem.draw_object(window, mainShader);
 
         NElf.mixPercent = (float)(sin(glfwGetTime()*2.5f)/2.5f)+0.5f;
-        NElf.Rotate(DivineMath::vec3(60.0f*deltaTime, 0.0f, 60.0f*deltaTime));
+        NElf.Rotate(60.0f*deltaTime, 0.0f, 60.0f*deltaTime);
         NElf.draw_object(window, mainShader);
 
         glfwSwapBuffers(window);

@@ -28,22 +28,36 @@ namespace DivineObject
             DivineMath::vec3 scale = {1.0f, 1.0f, 1.0f};
         
             unsigned int VBO, VAO, texture;
+            void read_face(std::vector<std::string> words, 
+                            std::vector<DivineMath::vec3>& v, 
+                            std::vector<DivineMath::vec2>& vt, 
+                            std::vector<DivineMath::vec3>& vn,
+                            std::vector<float>& vertices);
+
+            void read_corner(std::string description, 
+                std::vector<DivineMath::vec3>& v, 
+                std::vector<DivineMath::vec2>& vt, 
+                std::vector<DivineMath::vec3>& vn,
+                std::vector<float>& vertices);
+
         public:
+            size_t verticesCount;
             float mixPercent = 0.0f;
             DivineMath::mat4 modelMat;
-            std::vector<float> data;
             Object();
-            Object(std::string object_filepath, GLuint DRAW_MODE);
+            Object(std::string object_filepath);
+            Object(std::string object_filepath ,std::string texture_filepath);
             ~Object();
-            GLuint load_object(std::string object_filepath, GLuint DRAW_MODE);
+            GLuint load_object(std::string object_filepath);
             GLuint load_texture(std::string texture_filepath);
+            void load_obj_model(std::string object_filepath);
             void draw_object(GLFWwindow* window, GLuint shader);
 
             void UpdateModelMatrix();
             
-            void Translate(const DivineMath::vec3& translation);
-            void Rotate(const DivineMath::vec3& axis);
-            void Scale(const DivineMath::vec3& scale);
+            void Translate(float x ,float y ,float z);
+            void Rotate(float x ,float y ,float z);
+            void Scale(float x ,float y ,float z);
     };
 
     void TogglePolygonMode();

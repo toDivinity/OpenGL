@@ -3,9 +3,6 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
-#define TINYOBJLOADER_IMPLEMENTATION
-#include <tiny_obj_loader.h>
-
 namespace DivineEngine
 {
     GLFWwindow* createWindow(int width, int height, const char* title)
@@ -143,5 +140,28 @@ namespace DivineEngine
             }
             stbi_image_free(cursorImage.pixels);
         }
+    }
+
+    std::vector<std::string> split(const std::string line, const std::string delimiter) 
+    {
+        std::vector<std::string> result;
+        if (line.empty()) return result;
+        if (delimiter.empty()) {
+            result.push_back(line);
+            return result;
+        }
+
+        size_t start = 0;
+        size_t end = line.find(delimiter);
+        
+        while (end != std::string::npos) {
+            result.push_back(line.substr(start, end - start));
+            start = end + delimiter.length();
+            end = line.find(delimiter, start);
+        }
+        
+        result.push_back(line.substr(start));
+        
+        return result;
     }
 }

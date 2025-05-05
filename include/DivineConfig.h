@@ -31,4 +31,5 @@ GLFWwindow* createWindow(int width, int height, const char* title);
 float getDeltaTime();
 void setWindowIcon(GLFWwindow* window, std::string filepath);
 void setCursorIcon(GLFWwindow* window, GLFWcursor*& cursor, std::string filepath);
+std::vector<std::string> split(std::string line, std::string delimiter);
 }

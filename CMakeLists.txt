@@ -22,9 +22,6 @@ if (NOT glfw3_FOUND)
     add_subdirectory(dependencies/glfw3)
 endif()
 
-# tinyobjloader
-add_subdirectory(dependencies/tinyobjloader)
-
 # GLM
 find_package(glm QUIET)
 if (NOT glm_FOUND)
@@ -42,6 +39,5 @@ target_include_directories(DivineEngine PRIVATE
 target_link_libraries(DivineEngine PRIVATE
     OpenGL::GL
     glfw
-    tinyobjloader
     glm::glm
 )

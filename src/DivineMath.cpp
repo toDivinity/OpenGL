@@ -2,7 +2,7 @@
 namespace DivineMath
 {
     float radians(float degrees) {
-        return degrees * (PI / 180.0f);
+        return float(degrees * (PI / 180.0f));
     }
     mat4 create_translation_matrix(vec3 translation_vector)
     {
@@ -126,5 +126,15 @@ namespace DivineMath
             a.z * b.x - a.x * b.z,
             a.x * b.y - a.y * b.x
         };
+    }
+
+    
+    vec2 readVec2(std::vector<std::string> words)
+    {
+        return vec2(std::stof(words[1]), std::stof(words[2]));
+    }
+    vec3 readVec3(std::vector<std::string> words)
+    {
+        return vec3(std::stof(words[1]), std::stof(words[2]), std::stof(words[3]));
     }
 }

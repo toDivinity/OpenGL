@@ -1,5 +1,7 @@
 #pragma once
 #include <cmath>
+#include <vector>
+#include <string>
 
 #define PI 3.14159
 
@@ -122,5 +124,7 @@ namespace DivineMath
     mat4 create_projection_matrix(float fov, float aspect, float zNear, float zFar);
     vec3 normalize(const vec3& v);
     vec3 cross(const vec3& a, const vec3& b);
+    vec2 readVec2(std::vector<std::string> words);
+    vec3 readVec3(std::vector<std::string> words);
     float radians(float degrees);
 }

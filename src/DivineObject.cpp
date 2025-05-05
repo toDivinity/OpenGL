@@ -6,9 +6,15 @@ namespace DivineObject
     {
     }
 
-    Object::Object(std::string object_filepath, GLuint DRAW_MODE) 
+    Object::Object(std::string object_filepath) 
     {
-        load_object(object_filepath, DRAW_MODE);
+        load_object(object_filepath);
+    }
+
+    Object::Object(std::string object_filepath, std::string texture_filepath) 
+    {
+        load_object(object_filepath);
+        load_texture(texture_filepath);
     }
 
     Object::~Object()
@@ -17,13 +23,14 @@ namespace DivineObject
         glDeleteVertexArrays(1, &VAO);
     }
 
-    GLuint Object::load_object(std::string object_filepath, GLuint DRAW_MODE )
+    GLuint Object::load_object(std::string object_filepath)
     {
         std::ifstream object_datafile(DivineEngine::sourceDir + object_filepath);
         if (!object_datafile.is_open()) {
             return -1;
         }
 
+        std::vector<float> data;
         std::string line;
         std::stringstream bufferedLines;
         while(std::getline(object_datafile, line))
@@ -41,12 +48,14 @@ namespace DivineObject
             return -2;
         }
 
+        verticesCount=(int)data.size()/3;
+
         glGenVertexArrays(1, &VAO);
         glGenBuffers(1, &VBO);
 
         glBindVertexArray(VAO);
         glBindBuffer(GL_ARRAY_BUFFER, VBO);
-        glBufferData(GL_ARRAY_BUFFER, data.size() * sizeof(float), data.data(), DRAW_MODE);
+        glBufferData(GL_ARRAY_BUFFER, data.size() * sizeof(float), data.data(), GL_DYNAMIC_DRAW);
         
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(0 * sizeof(float)));
         glEnableVertexAttribArray(0);
@@ -135,23 +144,23 @@ namespace DivineObject
 
         glBindTexture(GL_TEXTURE_2D, texture);
         glBindVertexArray(VAO);
-        glDrawArrays(GL_TRIANGLES, 0, (int)data.size()/3);
+        glDrawArrays(GL_TRIANGLES, 0, (GLsizei) verticesCount);
         glBindVertexArray(0);
     }
 
-    void Object::Translate(const DivineMath::vec3& translation)
+    void Object::Translate(float x ,float y ,float z)
     {
-        this->position += translation;
+        position = DivineMath::vec3(x, y, z);
     }
 
-    void Object::Rotate(const DivineMath::vec3& axis)
+    void Object::Rotate(float x ,float y ,float z)
     {
-        this->rotation += DivineMath::vec3(axis.x, axis.y, axis.z);
+        rotation += DivineMath::vec3(x, y, z);
     }
 
-    void Object::Scale(const DivineMath::vec3& scale)
+    void Object::Scale(float x ,float y ,float z)
     {
-        this->scale = scale;
+        scale = DivineMath::vec3(x, y, z);
     }
 
     void Object::UpdateModelMatrix() {
@@ -159,6 +168,108 @@ namespace DivineObject
         DivineMath::create_scale_matrix(scale)*
         DivineMath::create_rotation_matrix(rotation)*
         DivineMath::create_translation_matrix(position);
+    }
+
+    void Object::load_obj_model(const std::string object_filepath)
+    {
+        std::vector<DivineMath::vec3> v;
+        std::vector<DivineMath::vec2> vt;
+        std::vector<DivineMath::vec3> vn;
+        std::vector<float> vertices;
+
+        std::ifstream file(object_filepath);
+        if (!file.is_open()) {
+            throw std::runtime_error("Failed to open file: " + object_filepath);
+        }
+
+        std::string line;
+        while (std::getline(file, line))
+        {
+            if (line.empty()) continue;
+            
+            std::vector<std::string> words = DivineEngine::split(line, " ");
+            if (words.empty()) continue;
+
+            if (words[0] == "v" && words.size() >= 4) {
+                v.push_back(DivineMath::readVec3(words));
+            }
+            else if (words[0] == "vt" && words.size() >= 3) {
+                vt.push_back(DivineMath::readVec2(words));
+            }
+            else if (words[0] == "vn" && words.size() >= 4) {
+                vn.push_back(DivineMath::readVec3(words));
+            }
+            else if (words[0] == "f" && words.size() >= 5) {
+                read_face(words, v, vt, vn, vertices);
+            }
+        }
+        file.close();
+
+        verticesCount = vertices.size();
+        glGenVertexArrays(1, &VAO);
+        glGenBuffers(1, &VBO);
+
+        glBindVertexArray(VAO);
+        glBindBuffer(GL_ARRAY_BUFFER, VBO);
+        glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(float), vertices.data(), GL_DYNAMIC_DRAW);
+        
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(0 * sizeof(float)));
+        glEnableVertexAttribArray(0);
+        
+        glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+        glEnableVertexAttribArray(2); 
+
+        glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(5 * sizeof(float)));
+        glEnableVertexAttribArray(1); 
+        
+
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+        glBindVertexArray(0);
+
+        std::cout << "Loaded model:" << std::endl;
+        std::cout << "Vertices: " << v.size() << std::endl;
+        std::cout << "TexCoords: " << vt.size() << std::endl;
+        std::cout << "Normals: " << vn.size() << std::endl;
+        std::cout << "vertices: " << vertices.size() << std::endl;
+    }
+
+    void Object::read_face(std::vector<std::string> words, 
+        std::vector<DivineMath::vec3>& v, 
+        std::vector<DivineMath::vec2>& vt, 
+        std::vector<DivineMath::vec3>& vn,
+        std::vector<float>& vertices)
+    {
+        size_t triangleCount = words.size()-3;
+
+        for(size_t i=0; i<triangleCount; i++)
+        {
+            read_corner(words[1], v, vt, vn, vertices);
+            read_corner(words[2+i], v, vt, vn, vertices);
+            read_corner(words[3+i], v, vt, vn, vertices);
+        }
+    }
+
+    void Object::read_corner(std::string description, 
+        std::vector<DivineMath::vec3>& v, 
+        std::vector<DivineMath::vec2>& vt, 
+        std::vector<DivineMath::vec3>& vn,
+        std::vector<float>& vertices)
+    {
+        std::vector<std::string> v_vt_vn = DivineEngine::split(description, "/");
+
+        DivineMath::vec3 pos = v[std::stol(v_vt_vn[0]) - 1];
+        vertices.push_back(pos.x);
+        vertices.push_back(pos.y);
+        vertices.push_back(pos.z);
+
+        DivineMath::vec2 tex = vt[std::stol(v_vt_vn[1]) - 1];
+        vertices.push_back(tex.x);
+        vertices.push_back(tex.y);
+
+        DivineMath::vec3 normal = vn[std::stol(v_vt_vn[2]) - 1];
+        vertices.push_back(normal.x);
+        vertices.push_back(normal.y);
+        vertices.push_back(normal.z);
     }
 
     void TogglePolygonMode()

@@ -6,7 +6,6 @@
 namespace DivineObject
 {
     static bool PolygonView = false;
-    static bool CursorView = false;
 
     struct Vertex 
     {
@@ -23,18 +22,29 @@ namespace DivineObject
 
     class Object
     {
+        private:
+            DivineMath::vec3 position = {0.0f, 0.0f, 0.0f};
+            DivineMath::vec3 rotation = {0.0f, 0.0f, 0.0f};
+            DivineMath::vec3 scale = {1.0f, 1.0f, 1.0f};
+        
+            unsigned int VBO, VAO, texture;
         public:
-        float mixPercent = 0.0f;
-        DivineMath::mat4 modelMat, viewMat, projectionMat;
-        std::vector<float> data;
-        unsigned int VBO, VAO, texture;
-        Object();
-        Object(std::string object_filepath, GLuint DRAW_MODE);
-        ~Object();
-        GLuint load_object(std::string object_filepath, GLuint DRAW_MODE);
-        GLuint load_texture(std::string texture_filepath);
-        void draw_object(GLFWwindow* window, GLuint shader);
+            float mixPercent = 0.0f;
+            DivineMath::mat4 modelMat;
+            std::vector<float> data;
+            Object();
+            Object(std::string object_filepath, GLuint DRAW_MODE);
+            ~Object();
+            GLuint load_object(std::string object_filepath, GLuint DRAW_MODE);
+            GLuint load_texture(std::string texture_filepath);
+            void draw_object(GLFWwindow* window, GLuint shader);
+
+            void UpdateModelMatrix();
+            
+            void Translate(const DivineMath::vec3& translation);
+            void Rotate(const DivineMath::vec3& axis);
+            void Scale(const DivineMath::vec3& scale);
     };
-    
-    void switchPolygonMode();
+
+    void TogglePolygonMode();
 }

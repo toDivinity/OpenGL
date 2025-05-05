@@ -114,15 +114,24 @@ namespace DivineObject
         int WIDTH, HEIGHT;
         glfwGetFramebufferSize(window, &WIDTH, &HEIGHT);
 
+        UpdateModelMatrix();
+
         GLuint mixPercentLocation = glGetUniformLocation(shader, "mixPercent");
         GLuint modelMatrixLocation = glGetUniformLocation(shader, "modelMatrix");
         GLuint viewMatrixLocation = glGetUniformLocation(shader, "viewMatrix");
         GLuint projectionMatrixLocation = glGetUniformLocation(shader, "projectionMatrix");
-        
+
+        DivineMath::mat4 view = DivineCamera::currentCamera->CreateView();
+        DivineMath::mat4 projection = DivineMath::create_projection_matrix(
+            DivineMath::radians(DivineCamera::currentCamera->GetCameraFOV()),
+            (float)WIDTH/(float)HEIGHT,
+            0.01f, 100.0f
+        );
+
         glUniform1f(mixPercentLocation, mixPercent);
         glUniformMatrix4fv(modelMatrixLocation, 1, GL_FALSE, modelMat.data);
-        glUniformMatrix4fv(viewMatrixLocation, 1, GL_FALSE, viewMat.data);
-        glUniformMatrix4fv(projectionMatrixLocation, 1, GL_FALSE, projectionMat.data);
+        glUniformMatrix4fv(viewMatrixLocation, 1, GL_FALSE, view.data);
+        glUniformMatrix4fv(projectionMatrixLocation, 1, GL_FALSE, projection.data);
 
         glBindTexture(GL_TEXTURE_2D, texture);
         glBindVertexArray(VAO);
@@ -130,7 +139,29 @@ namespace DivineObject
         glBindVertexArray(0);
     }
 
-    void switchPolygonMode()
+    void Object::Translate(const DivineMath::vec3& translation)
+    {
+        this->position += translation;
+    }
+
+    void Object::Rotate(const DivineMath::vec3& axis)
+    {
+        this->rotation += DivineMath::vec3(axis.x, axis.y, axis.z);
+    }
+
+    void Object::Scale(const DivineMath::vec3& scale)
+    {
+        this->scale = scale;
+    }
+
+    void Object::UpdateModelMatrix() {
+        modelMat = 
+        DivineMath::create_scale_matrix(scale)*
+        DivineMath::create_rotation_matrix(rotation)*
+        DivineMath::create_translation_matrix(position);
+    }
+
+    void TogglePolygonMode()
     {
         if(!PolygonView)
         {

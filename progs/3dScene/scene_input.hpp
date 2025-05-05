@@ -1,7 +1,6 @@
 #include "scene.h"
 
-int WIDTH = 1200, HEIGHT = 1000;
-GLfloat FOV = 90.0f;
+int WIDTH = 800, HEIGHT = 800;
 GLfloat lastX = (float)WIDTH/2, lastY = (float)HEIGHT/2;
 GLfloat savedLastX = 0, savedLastY = 0;
 bool firstMouse = true;
@@ -40,7 +39,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 
     if (key == GLFW_KEY_1 && action == GLFW_PRESS) 
     {
-        DivineObject::switchPolygonMode();
+        DivineObject::TogglePolygonMode();
     }
     
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) 
@@ -56,20 +55,20 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 
 void mouse_callback(GLFWwindow* window, int button, int action, int mods)
 {
-    if (button == GLFW_MOUSE_BUTTON_3 && action == GLFW_PRESS && DivineObject::CursorView==false) 
+    if (button == GLFW_MOUSE_BUTTON_3 && action == GLFW_PRESS && DivineEngine::CursorView==false) 
     {
         // Сохраняем последнюю позицию перед переключением в видимый режим
         savedLastX = lastX;
         savedLastY = lastY;
         glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-        DivineObject::CursorView = true;
+        DivineEngine::CursorView = true;
         cursorWasVisible = true;
     }
 
-    else if(button == GLFW_MOUSE_BUTTON_3 && action == GLFW_PRESS && DivineObject::CursorView==true)
+    else if(button == GLFW_MOUSE_BUTTON_3 && action == GLFW_PRESS && DivineEngine::CursorView==true)
     {
         glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-        DivineObject::CursorView = false;
+        DivineEngine::CursorView = false;
         
         // Восстанавливаем последнюю позицию мыши из сохраненных значений
         if(cursorWasVisible)
@@ -84,39 +83,9 @@ void mouse_callback(GLFWwindow* window, int button, int action, int mods)
 
 void cursor_callback(GLFWwindow* window, double xpos, double ypos)
 {
-    if (DivineObject::CursorView == false)
+    if (DivineEngine::CursorView == false)
     {
         DivineCamera::Camera* camera = static_cast<DivineCamera::Camera*>(glfwGetWindowUserPointer(window));
         camera->UpdateCameraAngles(&lastX, &lastY, &firstMouse, xpos, ypos);
-        // if(firstMouse)
-        // {
-        //     lastX = (float)xpos;
-        //     lastY = (float)ypos;
-        //     firstMouse = false;
-        //     return; // Пропускаем первый кадр, чтобы избежать резкого скачка
-        // }
-
-        // GLfloat xoffset = float (xpos - lastX);
-        // GLfloat yoffset = float (lastY - ypos); // Обратный знак, так как y-координаты идут сверху вниз
-        // lastX = (float)xpos;
-        // lastY = (float)ypos;
-
-        // const GLfloat sensitivity = 0.1f;
-        // xoffset *= sensitivity;
-        // yoffset *= sensitivity;
-
-        // camera->cameraYaw += xoffset;
-        // camera->cameraPitch -= yoffset;
-
-        // if(camera->cameraPitch > 89.0f)
-        //     camera->cameraPitch = 89.0f;
-        // if(camera->cameraPitch < -89.0f)
-        //     camera->cameraPitch = -89.0f;
-
-        // DivineMath::vec3 front;
-        // front.x = cos(glm::radians(camera->cameraYaw)) * cos(glm::radians(camera->cameraPitch));
-        // front.y = sin(glm::radians(camera->cameraPitch));
-        // front.z = sin(glm::radians(camera->cameraYaw)) * cos(glm::radians(camera->cameraPitch));
-        // camera->cameraTarget = DivineMath::normalize(front);
     }
 }

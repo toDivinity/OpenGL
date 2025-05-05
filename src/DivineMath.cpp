@@ -1,6 +1,9 @@
 #include "DivineMath.h"
 namespace DivineMath
 {
+    float radians(float degrees) {
+        return degrees * (PI / 180.0f);
+    }
     mat4 create_translation_matrix(vec3 translation_vector)
     {
         mat4 identity_matrix = 
@@ -61,6 +64,13 @@ namespace DivineMath
         };
 
         return rotation_matrix;
+    }
+
+    mat4 create_rotation_matrix(vec3 rotation)
+    {
+        return (DivineMath::create_x_rotation_matrix(rotation.x))
+        * (DivineMath::create_y_rotation_matrix(rotation.y))
+        * (DivineMath::create_z_rotation_matrix(rotation.z));
     }
 
 

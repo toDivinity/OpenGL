@@ -2,18 +2,34 @@
 
 namespace DivineCamera
 {
+    Camera mainCamera;
+    Camera* currentCamera = &mainCamera;
+
     Camera::Camera()
     {
-        cameraRotationSpeed = 60.0f;
-        cameraSpeed = 10.0f;
-        cameraPos = DivineMath::vec3(0.0f, 0.0f, 3.0f);
-        cameraTarget = DivineMath::vec3(0.0f, 0.0f, 1.0f);
+        
     }
     
     Camera::~Camera()
     {
 
-    }   
+    }
+
+    void Camera::SetCameraPos(DivineMath::vec3 pos)
+    {
+        cameraPos = pos;
+    }
+
+    
+    DivineMath::vec3 Camera::GetCameraPos()
+    {
+        return cameraPos;
+    }
+
+    DivineMath::vec3 Camera::GetCameraTarget()
+    {
+        return cameraTarget;
+    }
 
     DivineMath::mat4 Camera::LookAt(DivineMath::vec3 pos, DivineMath::vec3 target, DivineMath::vec3 up)
     {
@@ -49,12 +65,12 @@ namespace DivineCamera
     {
         if (key == GLFW_KEY_KP_ADD) 
         {
-            cameraSpeed += 5.0f;
+            cameraSpeed += 1.0f;
         }
         if (key == GLFW_KEY_KP_SUBTRACT)
         {
-            cameraSpeed -= 5.0f;
-            if (cameraSpeed < 5.0f) cameraSpeed = 5.0f;
+            cameraSpeed -= 1.0f;
+            if (cameraSpeed < 1.0f) cameraSpeed = 1.0f;
         }
         std::cout<<cameraSpeed<<std::endl;
     }
@@ -95,6 +111,16 @@ namespace DivineCamera
         direction.y = sin(glm::radians(cameraPitch));
         direction.z = sin(glm::radians(cameraYaw)) * cos(glm::radians(cameraPitch));
         this->cameraTarget = DivineMath::normalize(direction);
+    }
+
+    GLfloat Camera::GetCameraFOV()
+    {
+        return FOV;
+    }
+
+    void Camera::SetCameraFOV(GLfloat fov)
+    {
+        FOV = fov;
     }
 
     void Camera::CameraMovement(GLFWwindow *window, GLfloat deltaTime)
@@ -154,6 +180,8 @@ namespace DivineCamera
     
     void makeCameraCurrent(Camera* camera)
     {
-        currentCamera = camera;
+        if (camera != nullptr) {
+            currentCamera = camera;
+        }
     }
 }

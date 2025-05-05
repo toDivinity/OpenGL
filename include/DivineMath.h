@@ -89,6 +89,18 @@ namespace DivineMath
         return result;
     }
 
+    static mat4 operator*(const mat4& left, const float& right)
+    {
+        mat4 result = {0};
+
+        for(int i = 0; i<16; i++)
+        {
+            result.data[i]= left.data[i]*right;
+        }
+
+        return result;
+    }
+
     static mat4 operator+(const mat4& left, const mat4& right)
     {
         mat4 result = {0};
@@ -105,8 +117,10 @@ namespace DivineMath
     mat4 create_z_rotation_matrix(float rotation_angle_degrees);
     mat4 create_y_rotation_matrix(float rotation_angle_degrees);
     mat4 create_x_rotation_matrix(float rotation_angle_degrees);
+    mat4 create_rotation_matrix(vec3 rotation);
     mat4 create_scale_matrix(vec3 scale_vector);
     mat4 create_projection_matrix(float fov, float aspect, float zNear, float zFar);
     vec3 normalize(const vec3& v);
     vec3 cross(const vec3& a, const vec3& b);
+    float radians(float degrees);
 }

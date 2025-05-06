@@ -150,7 +150,7 @@ namespace DivineObject
 
     void Object::Translate(float x ,float y ,float z)
     {
-        position = DivineMath::vec3(x, y, z);
+        position += DivineMath::vec3(x, y, z);
     }
 
     void Object::Rotate(float x ,float y ,float z)
@@ -159,6 +159,24 @@ namespace DivineObject
     }
 
     void Object::Scale(float x ,float y ,float z)
+    {
+        scale.x = scale.x*x;
+        scale.y = scale.y*y;
+        scale.z = scale.z*z;
+        
+    }
+
+    void Object::TranslateTo(float x ,float y ,float z)
+    {
+        position = DivineMath::vec3(x, y, z);
+    }
+
+    void Object::RotateTo(float x ,float y ,float z)
+    {
+        rotation = DivineMath::vec3(x, y, z);
+    }
+
+    void Object::ScaleTo(float x ,float y ,float z)
     {
         scale = DivineMath::vec3(x, y, z);
     }

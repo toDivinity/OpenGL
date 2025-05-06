@@ -7,24 +7,11 @@ namespace DivineObject
 {
     static bool PolygonView = false;
 
-    struct Vertex 
-    {
-        glm::vec3 Position;
-        glm::vec3 Normal;
-        glm::vec2 TexCoords;
-    };
-
-    struct Texture 
-    {
-        unsigned int id;
-        std::string type;
-    };
-
     class Object
     {
         private:
             DivineMath::vec3 position = {0.0f, 0.0f, 0.0f};
-            DivineMath::vec3 rotation = {0.0f, 0.0f, 0.0f};
+            
             DivineMath::vec3 scale = {1.0f, 1.0f, 1.0f};
         
             unsigned int VBO, VAO, texture;
@@ -41,6 +28,7 @@ namespace DivineObject
                 std::vector<float>& vertices);
 
         public:
+        DivineMath::vec3 rotation = {0.0f, 0.0f, 0.0f};
             size_t verticesCount;
             float mixPercent = 0.0f;
             DivineMath::mat4 modelMat;
@@ -54,7 +42,13 @@ namespace DivineObject
             void draw_object(GLFWwindow* window, GLuint shader);
 
             void UpdateModelMatrix();
+
+            //equate
+            void TranslateTo(float x ,float y ,float z);
+            void RotateTo(float x ,float y ,float z);
+            void ScaleTo(float x ,float y ,float z);
             
+            //difference
             void Translate(float x ,float y ,float z);
             void Rotate(float x ,float y ,float z);
             void Scale(float x ,float y ,float z);

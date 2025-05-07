@@ -156,26 +156,6 @@ namespace DivineCamera
             cameraPos -= DivineMath::cross(DivineMath::cross(cameraTarget, DivineCamera::up), cameraTarget).normalize() * cameraSpeed * deltaTime;
             //std::cout<< cameraPos.x<<" "<< cameraPos.y<<" "<< cameraPos.z<<std::endl;
         }
-        if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
-            cameraPitch -= cameraRotationSpeed * deltaTime;
-            CameraUpdate();
-            std::cout<< cameraTarget.x<<" "<< cameraTarget.y<<" "<< cameraTarget.z<<std::endl;
-        }
-        if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
-            cameraPitch += cameraRotationSpeed * deltaTime;
-            CameraUpdate();
-            std::cout<< cameraTarget.x<<" "<< cameraTarget.y<<" "<< cameraTarget.z<<std::endl;
-        }
-        if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
-            cameraYaw += cameraRotationSpeed * deltaTime;
-            CameraUpdate();
-            std::cout<< cameraTarget.x<<" "<< cameraTarget.y<<" "<< cameraTarget.z<<std::endl;
-        }
-        if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
-            cameraYaw -= cameraRotationSpeed * deltaTime;
-            CameraUpdate();
-            std::cout<< cameraTarget.x<<" "<< cameraTarget.y<<" "<< cameraTarget.z<<std::endl;
-        }
     }
     
     void makeCameraCurrent(Camera* camera)

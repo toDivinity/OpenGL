@@ -6,23 +6,10 @@
 namespace DivineObject
 {
     static bool PolygonView = false;
-
-    struct Vertex 
-    {
-        glm::vec3 Position;
-        glm::vec3 Normal;
-        glm::vec2 TexCoords;
-    };
-
-    struct Texture 
-    {
-        unsigned int id;
-        std::string type;
-    };
-
+    
     class Object
     {
-        private:
+        protected:
             DivineMath::vec3 position = {0.0f, 0.0f, 0.0f};
             DivineMath::vec3 rotation = {0.0f, 0.0f, 0.0f};
             DivineMath::vec3 scale = {1.0f, 1.0f, 1.0f};

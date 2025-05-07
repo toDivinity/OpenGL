@@ -89,3 +89,23 @@ void cursor_callback(GLFWwindow* window, double xpos, double ypos)
         camera->UpdateCameraAngles(&lastX, &lastY, &firstMouse, xpos, ypos);
     }
 }
+
+void Hero::movement(GLFWwindow *window, GLfloat deltaTime)
+{
+    if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) 
+    {
+        position.z -= heroSpeed*deltaTime;
+    }
+    if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) 
+    {
+        position.z += heroSpeed*deltaTime;
+    }
+    if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) 
+    {
+        position.x += heroSpeed*deltaTime;
+    }
+    if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) 
+    {
+        position.x -= heroSpeed*deltaTime;
+    }
+}

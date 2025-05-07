@@ -177,7 +177,7 @@ namespace DivineObject
         std::vector<DivineMath::vec3> vn;
         std::vector<float> vertices;
 
-        std::ifstream file(object_filepath);
+        std::ifstream file(DivineEngine::sourceDir+object_filepath);
         if (!file.is_open()) {
             throw std::runtime_error("Failed to open file: " + object_filepath);
         }

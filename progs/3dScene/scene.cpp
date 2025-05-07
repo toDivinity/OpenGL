@@ -26,24 +26,19 @@ GLint Scene3d()
     glfwSetMouseButtonCallback(window, mouse_callback);
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
-    DivineObject::Object obj;
-    obj.load_obj_model("../../resources/tyanka.obj");
+    Hero obj;
+    obj.load_obj_model("resources/tyanka.obj");
+    obj.load_texture("resources/NEicon.png");
     obj.Scale(0.1f, 0.1f, 0.1f);
     obj.Translate(0.2f, 0.0f, 0.2f);
     obj.Rotate(0.0f, -90.0f, 0.0f);
-    obj.mixPercent = 1.0f;
-
-    DivineObject::Object sphere;
-    sphere.load_obj_model("../../resources/sphere.obj");
-    sphere.Scale(0.1f, 0.1f, 0.1f);
-    sphere.Translate(-0.2f, 0.0f, -0.2f);
+    obj.mixPercent = 0.0f;
 
     DivineObject::Object cube;
-    cube.load_obj_model("../../resources/cube.obj");
+    cube.load_obj_model("resources/cube.obj");
     cube.Scale(0.1f, 0.1f, 0.1f);
     cube.Translate(0.6f, 0.0f, 0.2f);
-    cube.Rotate(60.0f, -90.0f, 0.0f);
-    cube.mixPercent = 1.0f;
+    cube.mixPercent = 0.0f;
 
     DivineObject::Object NElf("resources/Object.txt", "resources/NEicon.png");
     NElf.Scale(0.2f, 0.2f, 0.2f);
@@ -74,9 +69,8 @@ GLint Scene3d()
         glClearColor(bgColor, bgColor, bgColor, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        sphere.draw_object(window, mainShader);
-
-        obj.mixPercent = (float)(sin(glfwGetTime()*2.5f)/2.5f)+0.5f;
+        obj.movement(window, deltaTime);
+        //obj.mixPercent = (float)(sin(glfwGetTime()*2.5f)/2.5f)+0.5f;
         obj.Rotate(0.0f, 60.0f*deltaTime, 0.0f);
         obj.draw_object(window, mainShader);
 

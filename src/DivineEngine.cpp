@@ -113,22 +113,22 @@ namespace DivineEngine
     }
 
 
-    void Object::draw_object(GLFWwindow* window, GLuint shader)
+    void Object::draw_object()
     {
         if(VAO == 0) return;
 
-        glfwMakeContextCurrent(window);
-        glUseProgram(shader);
+        glfwMakeContextCurrent(DivineEngine::currentWindow);
+        glUseProgram(*DivineEngine::currentShader);
 
         int WIDTH, HEIGHT;
-        glfwGetFramebufferSize(window, &WIDTH, &HEIGHT);
+        glfwGetFramebufferSize(currentWindow, &WIDTH, &HEIGHT);
 
         UpdateModelMatrix();
 
-        GLuint mixPercentLocation = glGetUniformLocation(shader, "mixPercent");
-        GLuint modelMatrixLocation = glGetUniformLocation(shader, "modelMatrix");
-        GLuint viewMatrixLocation = glGetUniformLocation(shader, "viewMatrix");
-        GLuint projectionMatrixLocation = glGetUniformLocation(shader, "projectionMatrix");
+        GLuint mixPercentLocation = glGetUniformLocation(*DivineEngine::currentShader, "mixPercent");
+        GLuint modelMatrixLocation = glGetUniformLocation(*DivineEngine::currentShader, "modelMatrix");
+        GLuint viewMatrixLocation = glGetUniformLocation(*DivineEngine::currentShader, "viewMatrix");
+        GLuint projectionMatrixLocation = glGetUniformLocation(*DivineEngine::currentShader, "projectionMatrix");
 
         DivineMath::mat4 view = DivineCamera::currentCamera->CreateView();
         DivineMath::mat4 projection = DivineMath::create_projection_matrix(
@@ -288,6 +288,26 @@ namespace DivineEngine
         vertices.push_back(normal.x);
         vertices.push_back(normal.y);
         vertices.push_back(normal.z);
+    }
+    
+    Scene::Scene()
+    {
+
+    }
+
+    Scene::~Scene() 
+    {
+        
+    }
+    void Scene::draw() 
+    {
+        for (Object* obj : objects) {
+            obj->draw_object();
+        }
+    }
+    void Scene::add_object(Object* object)
+    {
+        objects.push_back(object);
     }
 
     void TogglePolygonMode()

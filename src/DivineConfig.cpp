@@ -5,6 +5,10 @@
 
 namespace DivineEngine
 {
+    GLuint mainShader;
+    GLuint* currentShader = &mainShader;
+    GLFWwindow* currentWindow = nullptr;
+
     GLFWwindow* createWindow(int width, int height, const char* title)
     {
         if(!glfwInit())
@@ -21,7 +25,7 @@ namespace DivineEngine
             return nullptr;
         }
 
-        glfwMakeContextCurrent(window);
+        setWindowCurrent(window);
 
         if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
         {
@@ -33,6 +37,11 @@ namespace DivineEngine
         glEnable(GL_DEPTH_TEST);
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+        mainShader = DivineEngine::make_shader(
+            "shaders/mainVertex.glsl",
+            "shaders/mainFragment.glsl"
+        );
 
         return window;
     }
@@ -163,5 +172,15 @@ namespace DivineEngine
         result.push_back(line.substr(start));
         
         return result;
+    }
+    
+    void setShaderCurrent(GLuint* shader)
+    {
+        currentShader = shader;
+    }
+    void setWindowCurrent(GLFWwindow* window)
+    {
+        currentWindow = window;
+        glfwMakeContextCurrent(currentWindow);
     }
 }

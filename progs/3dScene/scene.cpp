@@ -5,22 +5,13 @@ GLint Scene3d()
 {
     GLFWwindow* window = DivineEngine::createWindow(WIDTH, HEIGHT, "3D Scene");
 
-    DivineEngine::setWindowIcon(window, "resources/NEicon.png");
-    
     GLFWcursor* cursor = nullptr;
     DivineEngine::setCursorIcon(window, cursor, "resources/nightelf.png");
+    DivineEngine::setWindowIcon(window, "resources/NEicon.png");
 
     DivineCamera::currentCamera->SetCameraPos(DivineMath::vec3(0.0f,0.0f,0.5f));
 
-    GLuint mainShader = DivineEngine::make_shader(
-        "shaders/mainVertex.glsl",
-        "shaders/mainFragment.glsl"
-    );
-
-    double mousePosX, mousePosY;
-
     glfwSetWindowUserPointer(window, &DivineCamera::mainCamera);
-
     glfwSetKeyCallback(window, key_callback);
     glfwSetCursorPosCallback(window, cursor_callback);
     glfwSetMouseButtonCallback(window, mouse_callback);
@@ -44,6 +35,13 @@ GLint Scene3d()
     CoordinateSystem.mixPercent = 0.8f;
     CoordinateSystem.Scale(2.0f, 2.0f, 2.0f);
 
+    DivineEngine::Scene scene;
+    scene.add_object(&nissan);
+    scene.add_object(&NElf);
+    scene.add_object(&Ground);
+    scene.add_object(&CoordinateSystem);
+
+    double mousePosX, mousePosY;
     while(!glfwWindowShouldClose(window))
     {
         glfwGetFramebufferSize(window, &WIDTH, &HEIGHT);
@@ -62,15 +60,11 @@ GLint Scene3d()
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         nissan.movement(window, deltaTime);
-        nissan.draw_object(window, mainShader);
-
-        Ground.draw_object(window, mainShader);
-
-        CoordinateSystem.draw_object(window, mainShader);
 
         NElf.mixPercent = (float)(sin(glfwGetTime()*2.5f)/2.5f)+0.5f;
         NElf.Rotate(60.0f*deltaTime, 0.0f, 60.0f*deltaTime);
-        NElf.draw_object(window, mainShader);
+
+        scene.draw();
 
         glfwSwapBuffers(window);
         glfwPollEvents();
@@ -81,8 +75,7 @@ GLint Scene3d()
         glfwDestroyCursor(cursor);
         cursor = nullptr;
     }
-
-    glDeleteProgram(mainShader);
+    glDeleteProgram(DivineEngine::mainShader);
     glfwTerminate();
     return 0;
 }

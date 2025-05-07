@@ -38,7 +38,7 @@ namespace DivineEngine
             GLuint load_object(std::string object_filepath);
             GLuint load_texture(std::string texture_filepath);
             void load_obj_model(std::string object_filepath);
-            void draw_object(GLFWwindow* window, GLuint shader);
+            void draw_object();
 
             void UpdateModelMatrix();
 
@@ -56,6 +56,8 @@ namespace DivineEngine
     class Scene
     {
         public:
+        Scene();
+        ~Scene();
         std::vector<Object*> objects;
         void add_object(Object*);
         void draw();

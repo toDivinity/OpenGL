@@ -26,10 +26,15 @@ unsigned int make_shader (const std::string& vertex_filepath, const std::string&
 unsigned int make_module (const std::string& filepath, unsigned int module_type);
 
 static bool CursorView = false;
+extern GLuint mainShader;
+extern GLuint* currentShader;
+extern GLFWwindow* currentWindow;
 
 GLFWwindow* createWindow(int width, int height, const char* title);
 float getDeltaTime();
 void setWindowIcon(GLFWwindow* window, std::string filepath);
 void setCursorIcon(GLFWwindow* window, GLFWcursor*& cursor, std::string filepath);
+void setWindowCurrent(GLFWwindow* window);
+void setShaderCurrent(GLuint* shader);
 std::vector<std::string> split(std::string line, std::string delimiter);
 }

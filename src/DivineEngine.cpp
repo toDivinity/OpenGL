@@ -1,6 +1,6 @@
-#include "DivineObject.h"
+#include "DivineEngine.h"
 #include "stb_image.h"
-namespace DivineObject
+namespace DivineEngine
 {
     Object::Object()
     {

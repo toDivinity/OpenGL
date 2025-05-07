@@ -1,7 +1,7 @@
     #pragma once
     #include "DivineConfig.h"
     #include "DivineMath.h"
-    #include "DivineObject.h"
+    #include "DivineEngine.h"
     #include "DivineInput.h"
     #include "DivineCamera.h"
     #include "stb_image.h"
@@ -11,7 +11,7 @@
     void mouse_callback(GLFWwindow* window, int button, int action, int mods);
     void cursor_callback(GLFWwindow* window, double xpos, double ypos);
 
-    class Hero : public DivineObject::Object
+    class Hero : public DivineEngine::Object
     {
         private:
         float heroSpeed = 0.5f;

@@ -39,7 +39,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 
     if (key == GLFW_KEY_1 && action == GLFW_PRESS) 
     {
-        DivineObject::TogglePolygonMode();
+        DivineEngine::TogglePolygonMode();
     }
     
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) 

@@ -26,29 +26,21 @@ GLint Scene3d()
     glfwSetMouseButtonCallback(window, mouse_callback);
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
-    Hero obj;
-    obj.load_obj_model("resources/tyanka.obj");
-    obj.load_texture("resources/NEicon.png");
-    obj.Scale(0.1f, 0.1f, 0.1f);
-    obj.Translate(0.2f, 0.0f, 0.2f);
-    obj.Rotate(0.0f, -90.0f, 0.0f);
-    obj.mixPercent = 0.0f;
+    Hero nissan;
+    nissan.load_obj_model("resources/nissan.obj");
+    nissan.load_texture("resources/nissan.png");
+    nissan.Scale(0.1f, 0.1f, 0.1f);
+    nissan.Translate(0.6f, 0.0f, 0.6f);
 
-    DivineObject::Object cube;
-    cube.load_obj_model("resources/cube.obj");
-    cube.Scale(0.1f, 0.1f, 0.1f);
-    cube.Translate(0.6f, 0.0f, 0.2f);
-    cube.mixPercent = 1.0f;
-
-    DivineObject::Object NElf("resources/Object.txt", "resources/NEicon.png");
+    DivineEngine::Object NElf("resources/Object.txt", "resources/NEicon.png");
     NElf.Scale(0.2f, 0.2f, 0.2f);
     
-    DivineObject::Object Ground("resources/ground.txt", "resources/grass.png");
+    DivineEngine::Object Ground("resources/ground.txt", "resources/grass.png");
     Ground.Translate(0.0f, 0.3f, 0.0f);
     Ground.Scale(2.0f, 2.0f, 1.0f);
     Ground.Rotate(90.0f, 0.0f, 0.0f);
 
-    DivineObject::Object CoordinateSystem("resources/CoordinateSystem.txt");
+    DivineEngine::Object CoordinateSystem("resources/CoordinateSystem.txt");
     CoordinateSystem.mixPercent = 0.8f;
     CoordinateSystem.Scale(2.0f, 2.0f, 2.0f);
 
@@ -69,14 +61,9 @@ GLint Scene3d()
         glClearColor(bgColor, bgColor, bgColor, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        obj.movement(window, deltaTime);
-        //obj.mixPercent = (float)(sin(glfwGetTime()*2.5f)/2.5f)+0.5f;
-        obj.Rotate(0.0f, 60.0f*deltaTime, 0.0f);
-        obj.draw_object(window, mainShader);
+        nissan.movement(window, deltaTime);
+        nissan.draw_object(window, mainShader);
 
-        cube.Rotate(60.0f*deltaTime/2, 60.0f*deltaTime/3, 60.0f*deltaTime);
-        cube.draw_object(window, mainShader);
-        
         Ground.draw_object(window, mainShader);
 
         CoordinateSystem.draw_object(window, mainShader);

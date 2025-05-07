@@ -3,7 +3,7 @@
 #include "DivineMath.h"
 #include "DivineCamera.h"
 
-namespace DivineObject
+namespace DivineEngine
 {
     static bool PolygonView = false;
     class Object
@@ -51,6 +51,14 @@ namespace DivineObject
             void Translate(float x ,float y ,float z);
             void Rotate(float x ,float y ,float z);
             void Scale(float x ,float y ,float z);
+    }; 
+    
+    class Scene
+    {
+        public:
+        std::vector<Object*> objects;
+        void add_object(Object*);
+        void draw();
     };
 
     void TogglePolygonMode();

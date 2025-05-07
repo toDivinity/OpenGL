@@ -38,7 +38,7 @@ GLint Scene3d()
     cube.load_obj_model("resources/cube.obj");
     cube.Scale(0.1f, 0.1f, 0.1f);
     cube.Translate(0.6f, 0.0f, 0.2f);
-    cube.mixPercent = 0.0f;
+    cube.mixPercent = 1.0f;
 
     DivineObject::Object NElf("resources/Object.txt", "resources/NEicon.png");
     NElf.Scale(0.2f, 0.2f, 0.2f);
@@ -74,7 +74,7 @@ GLint Scene3d()
         obj.Rotate(0.0f, 60.0f*deltaTime, 0.0f);
         obj.draw_object(window, mainShader);
 
-        cube.Rotate(60.0f*deltaTime, 0.0f, 60.0f*deltaTime);
+        cube.Rotate(60.0f*deltaTime/2, 60.0f*deltaTime/3, 60.0f*deltaTime);
         cube.draw_object(window, mainShader);
         
         Ground.draw_object(window, mainShader);
